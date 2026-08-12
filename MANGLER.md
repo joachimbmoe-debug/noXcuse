@@ -6,17 +6,17 @@
 > bygging, ikke i kilden». Kryss av `[x]` og skriv svaret rett i lista når noe blir bekreftet — ikke
 > flytt det til en annen fil.
 
-**Oppdatert sist:** 2026-08-12 — telefon, e-post og importselskapets navn (Levertnorge AS) bekreftet av Joachim, resten uendret.
+**Oppdatert sist:** 2026-08-12 — telefon, e-post, importselskapets navn (Levertnorge AS) og domene (no-xcuse.no) bekreftet av Joachim, resten uendret.
 
 ---
 
 ## 🔥 Haster mest
 
-Disse tre stopper mest — én blokkerer to hele kundesegmenter, én er en juridisk skranke, én blokkerer alt.
+De tyngste blokkerne — én stopper to hele kundesegmenter, én er en juridisk skranke, én (domenet) er nå løst.
 
 - [ ] **[#31] ⭐ Tjenestelisten fra importselskapet, med pris per post** — Erik / importselskapet. Blokkerer spor 2 og 3 (to av fire kundesegmenter) helt. Se `docs/07_BEKREFT_LISTE.md` for detaljer.
 - [ ] **[#43] ⛔ Finansieringsformidling — konsesjonsplikt** — avklares juridisk. Markedsføres ikke i noen form før dette er avklart. Ikke engang som «kommer».
-- [ ] **[#4] Domene** — Erik. Blokkerer kanoniske URL-er, OG-tagger, e-postadresser og `astro.config.mjs` sin `site`-verdi. Se også Fase 1-plassholderne under.
+- [x] **[#4] Domene** — **no-xcuse.no**. Bekreftet av Joachim 2026-08-12, satt i `config.ts` og `astro.config.mjs` sin `site`-verdi.
 
 ---
 
@@ -86,7 +86,7 @@ Disse tre stopper mest — én blokkerer to hele kundesegmenter, én er en jurid
 
 Satt i Fase 1 for at bygget skulle fungere, ikke reelle fakta i seg selv:
 
-- [ ] **Placeholder-domene for `site`** (kreves av `@astrojs/sitemap` for å generere `sitemap.xml`) — `https://nettside-3-placeholder.noxcuse.no` i `astro.config.mjs:6`. Byttes til ekte `DOMENE` (se `[#4]` over) når det er bekreftet.
+- [x] **Placeholder-domene for `site`** — løst sammen med `[#4]`. `astro.config.mjs` bruker nå `https://no-xcuse.no`.
 - [ ] **Fontfiler er tomme 0-byte woff2-stubber**, ikke ekte skrift — Montserrat 600/700 og Inter 400/500 i `public/fonts/`. Hent inn ekte woff2 og bytt ut.
 
 ---
