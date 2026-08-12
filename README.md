@@ -1,10 +1,15 @@
-# Astro Starter Kit: Minimal
+# noXcuse — nettside
 
-```sh
-npm create astro@latest -- --template minimal
-```
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6dcf3b7f-57d5-4cc4-b02a-3e8bd7e32f3c/deploy-status)](https://app.netlify.com/projects/noxcuse-349/deploys)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Astro 5 + Tailwind 4-gjenoppbygging av noXcuse (No Xcuse AS) sin nettside — norsk
+salgsselskap for fabrikkbygde småhus og hytter produsert av Husvik 3D SIA i Riga.
+
+Produksjonsbygget feiler **med vilje** til alle fakta i [`MANGLER.md`](./MANGLER.md)
+er bekreftet — se `src/lib/bekreft.ts`. Det er ikke en byggfeil å rette.
+
+Full byggehistorikk og status i `.foreman/ledger.md` i kundemappa (`Kunder/noXcuse/`
+ett nivå opp).
 
 ## 🚀 Project Structure
 
