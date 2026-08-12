@@ -1,0 +1,73 @@
+---
+// Tillitsstripe — fire korte tillitspunkter rett under hero. Se DESIGN.md/01_BYGGEPLAN.md
+// Fase 3 steg 7 og 04_TEKST_ALLE_SIDER.md §1.1 ("Tillitsstripe rett under hero").
+// Tekst kopiert ordrett. Ikoner i tynn strek, ALDRI verktøysymboler (hammer/pensel/
+// malerrulle) — se CLAUDE.md og DESIGN.md §8.
+//
+// § 12-garanti/reklamasjonsrett skal ALDRI stå her — se 04_TEKST_ALLE_SIDER.md §14b,
+// tabellen under "Hvor det gjelder": "Tillitsstripe forsiden — ✅ Rettet — byttet mot
+// «Årlige fabrikkinspeksjoner»". Fjerdepunktet under er derfor det strukturelle
+// fortrinnet (én avtalepart), ikke selve garantien.
+//
+// Selvstendig komponent uten egen H2 — den er en strimmel, ikke en seksjon med
+// overskrift. aria-label på lista gir skjermlesere kontekst i stedet.
+import { Home, ShieldCheck, CalendarCheck, FileCheck2 } from 'lucide-astro';
+
+const punkter = [
+  { ikon: Home, tekst: 'Ordinær bolig etter TEK17' },
+  { ikon: ShieldCheck, tekst: 'SINTEF Teknisk Godkjenning' },
+  { ikon: CalendarCheck, tekst: 'Årlige fabrikkinspeksjoner' },
+  { ikon: FileCheck2, tekst: 'Én kontrakt, én garantiadresse' },
+];
+---
+
+<section class="tillitsstripe" aria-label="Tillitspunkter">
+  <ul class="tillitsstripe__liste">
+    {punkter.map(({ ikon: Ikon, tekst }) => (
+      <li class="tillitsstripe__punkt">
+        <Ikon class="tillitsstripe__ikon" size={20} stroke-width={1.5} aria-hidden="true" />
+        <span>{tekst}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .tillitsstripe {
+    background-color: var(--color-lin);
+  }
+
+  .tillitsstripe__liste {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-3) var(--spacing-side-x);
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-rom-2);
+  }
+
+  .tillitsstripe__punkt {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-rom-1);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-mikro);
+    color: var(--color-marine);
+  }
+
+  .tillitsstripe__ikon {
+    flex-shrink: 0;
+    color: var(--color-gull-dyp);
+  }
+
+  @media (min-width: 640px) {
+    .tillitsstripe__liste {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .tillitsstripe__punkt {
+      font-size: var(--text-liten);
+    }
+  }
+</style>

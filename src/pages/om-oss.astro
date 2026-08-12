@@ -1,0 +1,234 @@
+---
+// `/om-oss` — Fase 3 steg 12. All tekst kopiert ordrett fra 04_TEKST_ALLE_SIDER.md §7.
+//
+// "Hvem som står bak": §7 bekrefter kun at Erik Moe er kjent som eier — rolle,
+// bakgrunn og bilde er MANGLER.md #18, ⚠️ BEKREFT i kilden. Ingen historie er
+// diktet opp. Rutes gjennom faktaEllerPlassholder() (samme mønster som
+// tomta-er-klar.astro sin "Svartid"-linje: ikke et config.ts-felt, alltid null).
+//
+// "Verdikjeden": §7, verbatim. Importselskapets navn via
+// faktaEllerPlassholder(config.IMPORTSELSKAP) — config.ts har den null i dag.
+//
+// "Referanser": §7 sin "Om referanser"-tekst, verbatim. Selskapet har null leverte
+// prosjekter før Eidsfoss 20.08.2026 (config.VIS_REFERANSER er false) — teksten sier
+// dette rett ut, ingen antydning om noe annet. §7 sier selv at denne setningen
+// "erstattes med faktisk dokumentasjon etter overtakelse — den slettes ikke bare",
+// dvs. en senere dispatch, ikke løst her.
+import Side from '../layouts/Side.astro';
+import { config } from '../config';
+import { faktaEllerPlassholder } from '../lib/bekreft';
+
+const importselskap = faktaEllerPlassholder(config.IMPORTSELSKAP, 'Importselskapets navn');
+const erikBakgrunn = faktaEllerPlassholder(null, 'Erik Moes rolle, bakgrunn og bilde');
+---
+
+<Side
+  title="noXcuse — Navnet er løftet"
+  description="No Xcuse har ingen unnskyldning for ikke å levere i henhold til det som er avtalt. Prisen skal stå seg. Kvaliteten skal kunne dokumenteres. Du skal få svar."
+>
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Navnet er løftet</h1>
+      <p class="hero__ingress">
+        No Xcuse har ingen unnskyldning for ikke å levere i henhold til det som er avtalt. Prisen
+        skal stå seg. Kvaliteten skal kunne dokumenteres. Du skal få svar.
+      </p>
+    </div>
+  </section>
+
+  {/* De fire verdiene — §7, verbatim */}
+  <section class="verdier reveal" data-reveal aria-labelledby="verdier-h2">
+    <div class="verdier__inner">
+      <h2 id="verdier-h2" class="verdier__h2">De fire verdiene</h2>
+      <div class="verdier__grid">
+        <div class="verdi">
+          <h3 class="verdi__h3">Ærlig.</h3>
+          <p class="verdi__tekst">
+            Vi sier hele sannheten på forhånd. Det du må ordne selv, står i klartekst. Vi tjener
+            på tillit, ikke på det du ikke fikk vite.
+          </p>
+        </div>
+        <div class="verdi">
+          <h3 class="verdi__h3">Etterrettelig.</h3>
+          <p class="verdi__tekst">
+            Vi kan stå for alt vi sier. Glipper noe, sier vi fra tidlig og rydder opp. Du skal
+            aldri måtte purre deg til et ærlig svar.
+          </p>
+        </div>
+        <div class="verdi">
+          <h3 class="verdi__h3">Profesjonell.</h3>
+          <p class="verdi__tekst">
+            Vi kan produktet, regelverket og prosessen. Ingen pressalg, ingen kunstige frister.
+            Er noe uklart i det vi har skrevet, er det vi som har gjort en dårlig jobb.
+          </p>
+        </div>
+        <div class="verdi">
+          <h3 class="verdi__h3">Positiv.</h3>
+          <p class="verdi__tekst">
+            Vi leter etter det som er mulig. Men velger du å vente, skal du også ha fått ærlige
+            svar av oss.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Hvem som står bak — §7. Kun det bekreftede (eier), resten ⚠️ BEKREFT. */}
+  <section class="staar-bak reveal" data-reveal aria-labelledby="staar-bak-h2">
+    <div class="staar-bak__inner">
+      <h2 id="staar-bak-h2" class="staar-bak__h2">Hvem som står bak</h2>
+      <p class="staar-bak__tekst">Erik Moe er eier av No Xcuse AS.</p>
+      <p class="staar-bak__bekreft">{erikBakgrunn}</p>
+    </div>
+  </section>
+
+  {/* Verdikjeden — §7, verbatim */}
+  <section class="verdikjeden reveal" data-reveal aria-labelledby="verdikjeden-h2">
+    <div class="verdikjeden__inner">
+      <h2 id="verdikjeden-h2" class="verdikjeden__h2">Verdikjeden</h2>
+      <p class="verdikjeden__tekst">
+        Husvik 3D SIA bygger huset i Riga og frakter det til norskegrensen. {importselskap}{' '}
+        håndterer import, transport, montasje og garanti. noXcuse selger huset og eier
+        kundeforholdet — det er oss du snakker med, hele veien.
+      </p>
+    </div>
+  </section>
+
+  {/* Referanser — §7, verbatim. Ærlig om null leverte prosjekter før Eidsfoss. */}
+  <section class="referanser reveal" data-reveal aria-labelledby="referanser-h2">
+    <div class="referanser__inner">
+      <h2 id="referanser-h2" class="referanser__h2">Referanser</h2>
+      <p class="referanser__tekst">
+        Vi har ikke levert hus i Norge ennå. Den første leveransen er i Eidsfoss, 20. august
+        2026. Vi kommer til å legge ut bilder og tall fra den, og vi kommer ikke til å legge ut
+        noe før den er ferdig.
+      </p>
+    </div>
+  </section>
+</Side>
+
+<style>
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-7) var(--spacing-side-x) var(--spacing-rom-5);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 20ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .verdier {
+    background-color: var(--color-lin);
+  }
+  .verdier__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .verdier__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+  .verdier__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-3);
+  }
+  @media (min-width: 640px) {
+    .verdier__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .verdi {
+    padding-left: var(--spacing-rom-2);
+    border-left: 2px solid var(--color-gull-sterk);
+  }
+  .verdi__h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-stor);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+  .verdi__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0;
+  }
+
+  .staar-bak {
+    background-color: var(--color-bomull);
+  }
+  .staar-bak__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .staar-bak__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .staar-bak__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .staar-bak__bekreft {
+    font-size: var(--text-liten);
+    color: var(--color-gull-dyp);
+    margin: 0;
+  }
+
+  .verdikjeden {
+    background-color: var(--color-lin);
+  }
+  .verdikjeden__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .verdikjeden__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .verdikjeden__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0;
+  }
+
+  .referanser {
+    background-color: var(--color-bomull);
+  }
+  .referanser__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+    border-top: 2px solid var(--color-gull-sterk);
+  }
+  .referanser__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: var(--spacing-rom-3) 0 var(--spacing-rom-2);
+  }
+  .referanser__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,135 @@
+---
+// OrdnerSelv — "Dette ordner du selv". Se DESIGN.md §6/§8 og 04_TEKST_ALLE_SIDER.md §1.4
+// (all tekst kopiert ordrett derfra). Data fra src/data/ordner-selv.ts.
+//
+// Bevisst plassert høyt på siden (kundens vurdering, ikke denne komponentens) — det er
+// selve poenget: selskapet sier det først, ikke sist. Se §1.4-kommentaren i kildefila.
+//
+// Ikon: Check (lucide-astro) — nøytral huke, ingen forsøk på ett unikt ikon per tema.
+// Aldri verktøysymboler (hammer/pensel/malerrulle), se DESIGN.md §8 og CLAUDE.md.
+import { Check } from 'lucide-astro';
+import Knapp from './Knapp.astro';
+import { ordnerSelv } from '../data/ordner-selv';
+---
+
+<section class="ordner-selv">
+  <div class="ordner-selv__inner">
+    <h2 class="ordner-selv__h2">Dette ordner du selv — og det sier vi nå, ikke etterpå</h2>
+    <p class="ordner-selv__ingress">
+      Seks ting inngår ikke i prisen på huset. De koster penger, og de koster tid. Jo før du vet
+      det, jo bedre planlegger du.
+    </p>
+
+    <ul class="ordner-selv__grid">
+      {ordnerSelv.map((post) => (
+        <li class="ordner-selv__post">
+          <span class="ordner-selv__ikon" aria-hidden="true">
+            <Check size={18} strokeWidth={1.5} />
+          </span>
+          <div>
+            <p class="ordner-selv__punkt">{post.punkt}</p>
+            <p class="ordner-selv__tekst">{post.tekst}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <p class="ordner-selv__avslutning">
+      Vi kan ikke gi deg et tall på disse på forhånd, fordi de avhenger av tomta di. Det vi kan
+      gjøre, er å se på tomta og si hva som kreves der.
+    </p>
+
+    {/* primaer, ikke gull — seksjonen ligger på --color-lin (lys), og gull er kun for
+        marine flater (02_DESIGNSYSTEM.md §6). DESIGN.md lister primaer som nettopp
+        varianten for "Book befaring · Kan du bygge her?" — retta etter blindverifikasjon. */}
+    <Knapp variant="primaer" href="/kan-du-bygge-her">Kan du bygge her? Få en gratis førstevurdering</Knapp>
+  </div>
+</section>
+
+<style>
+  .ordner-selv {
+    background-color: var(--color-lin);
+  }
+
+  .ordner-selv__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+
+  .ordner-selv__h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+
+  .ordner-selv__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-5);
+  }
+
+  .ordner-selv__grid {
+    list-style: none;
+    margin: 0 0 var(--spacing-rom-5);
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-4);
+  }
+
+  @media (min-width: 640px) {
+    .ordner-selv__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .ordner-selv__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .ordner-selv__post {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-rom-2);
+  }
+
+  .ordner-selv__ikon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-gull);
+    color: var(--color-marine);
+  }
+
+  .ordner-selv__punkt {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+
+  .ordner-selv__tekst {
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+    margin: 0;
+  }
+
+  .ordner-selv__avslutning {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+</style>

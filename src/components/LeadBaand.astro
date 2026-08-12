@@ -1,0 +1,74 @@
+---
+// LeadBaand — kostnadsguiden-båndet. Se 04_TEKST_ALLE_SIDER.md §1.8. Tekst kopiert ordrett.
+// Mørk seksjon, marine bakgrunn, gull CTA — DETTE er en marine seksjon, så gull-varianten
+// er riktig her (DESIGN.md §6 Knapp-tabell: "Gull — Kun på marine seksjoner. Én per
+// seksjon"). Se Kostnadstrapp.astro sin kommentar for kontrast-tilfellet (lys bunn der).
+//
+// VALG — statisk CTA-knapp, ikke skjemafelter: kilden beskriver et 3-felts skjema
+// (Fornavn · E-post · Samtykke), men ekte innsending er Fase 4 (se 01_BYGGEPLAN.md).
+// Ikke-funksjonelle inputfelt midt i en ferdig side ville sett ødelagt ut for en
+// besøkende som prøver å skrive i dem. En ærlig CTA-knapp til /kostnadsguiden (som får
+// sitt eget ekte skjema i en senere dispatch) er tryggere enn en falsk boks. Flagget i
+// rapport.
+//
+// Marine flate — fokusring MÅ overstyres til --color-gull, ikke arvet --color-gull-dyp
+// (~2,5:1 på marine). Se DESIGN.md §6 og Footer.astro sitt mønster.
+import Knapp from './Knapp.astro';
+---
+
+<section class="lead-baand" aria-labelledby="lead-baand-h2">
+  <div class="lead-baand__inner">
+    <h2 id="lead-baand-h2" class="lead-baand__h2">Hva koster et småhus egentlig?</h2>
+    <p class="lead-baand__tekst">
+      Vi har skrevet ned hele regnestykket: de tre leveransenivåene, hva som ligger i hvert av
+      dem, og de seks postene du må ordne selv. Ti sider, ingen «fra»-priser, ingen skjulte
+      forbehold.
+    </p>
+
+    <Knapp variant="gull" href="/kostnadsguiden">Send meg kostnadsguiden</Knapp>
+
+    <p class="lead-baand__under">
+      Én e-post med guiden, og inntil fem oppfølgings-e-poster. Meld deg av når du vil.
+    </p>
+  </div>
+</section>
+
+<style>
+  .lead-baand {
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+  }
+
+  /* Se DESIGN.md §6 — --color-gull-dyp er kalibrert for lys bakgrunn, ikke marine. */
+  .lead-baand :focus-visible {
+    outline-color: var(--color-gull);
+  }
+
+  .lead-baand__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lead-baand__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-bomull);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+
+  .lead-baand__tekst {
+    font-size: var(--text-stor);
+    color: color-mix(in srgb, var(--color-bomull) 88%, transparent);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+
+  .lead-baand__under {
+    font-size: var(--text-mikro);
+    color: color-mix(in srgb, var(--color-bomull) 70%, transparent);
+    margin: var(--spacing-rom-2) 0 0;
+  }
+</style>

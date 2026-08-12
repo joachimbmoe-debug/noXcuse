@@ -1,0 +1,111 @@
+---
+// ModellKort — plassholderkort til "Modellene"-seksjonen på forsiden.
+// Se 04_TEKST_ALLE_SIDER.md §1.5: "⚠️ BEKREFT — modellnavn, kvadratmeter og
+// romfordeling finnes ikke i kunnskapsbasen. Ikke finn på navn. Bygg 3–6 kort med
+// tydelige plassholdere til Erik har levert modelloversikten fra Husvik."
+//
+// Ingen src/data/modeller/-fil ennå (bevisst tom, egen senere dispatch) — denne
+// komponenten kaller derfor faktaEllerPlassholder() direkte per instans i stedet
+// for å lese en datafil som ikke finnes.
+//
+// ALDRI stockfoto eller KI-generert bilde her, heller ikke som plassholder — se
+// CLAUDE.md "Absolutte forbud". Boksen under er en tydelig, ærlig plassholder,
+// aldri noe en besøkende kan forveksle med et ekte bilde.
+import { faktaEllerPlassholder } from '../lib/bekreft';
+
+interface Props {
+  navn: string | null;
+  kvadratmeter: number | null;
+  bildeAlt: string;
+  // Lenkemål for kortet. Default "/modeller" bevarer eksisterende
+  // forsideoppførsel uendret (ingen egen modellside å lenke til der ennå).
+  // Modelloversikten (fase 3 steg 10) sender egen slug-URL per kort.
+  href?: string;
+}
+
+const { navn, kvadratmeter, bildeAlt, href = '/modeller' } = Astro.props as Props;
+
+const navnVerdi = faktaEllerPlassholder(navn, 'Modellnavn');
+const kvmVerdi = faktaEllerPlassholder(kvadratmeter !== null ? String(kvadratmeter) : null, 'Kvadratmeter');
+---
+
+<div class="modell-kort">
+  <div class="modell-kort__bilde" role="img" aria-label={bildeAlt}>
+    <span aria-hidden="true">❐</span>
+    <span>Bilde kommer</span>
+  </div>
+
+  <div class="modell-kort__innhold">
+    <p class="modell-kort__navn">{navnVerdi}</p>
+    <p class="modell-kort__kvm">{kvmVerdi} m²</p>
+    <p class="modell-kort__pris">Pris: ikke publisert ennå</p>
+    <a class="modell-kort__lenke" href={href}>Se modellen →</a>
+  </div>
+</div>
+
+<style>
+  .modell-kort {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bomull);
+    border: 1px solid var(--color-kant);
+    border-radius: var(--radius-kort);
+    overflow: hidden;
+  }
+
+  .modell-kort__bilde {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-rom-1);
+    aspect-ratio: 4 / 3;
+    background-color: var(--color-lin);
+    color: var(--color-marine-80);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+  }
+  .modell-kort__bilde span:first-child {
+    font-size: 1.75rem;
+  }
+
+  .modell-kort__innhold {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+    padding: var(--spacing-rom-3);
+  }
+
+  .modell-kort__navn {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-stor);
+    color: var(--color-feil);
+    margin: 0;
+  }
+
+  .modell-kort__kvm {
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+
+  .modell-kort__pris {
+    font-size: var(--text-mikro);
+    color: var(--color-marine-80);
+    margin: var(--spacing-rom-1) 0 0;
+  }
+
+  .modell-kort__lenke {
+    margin-top: var(--spacing-rom-2);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    color: var(--color-gull-dyp);
+    text-decoration: none;
+  }
+  .modell-kort__lenke:hover {
+    text-decoration: underline;
+  }
+</style>

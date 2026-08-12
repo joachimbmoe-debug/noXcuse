@@ -1,0 +1,346 @@
+---
+// `/kan-du-bygge-her` — gratis førstevurdering. Fase 3 steg 13.
+// Primær-CTA på hele siden — erstatter den betalte mulighetsvurderingen som
+// hovedkonvertering, se 03_SALGSFUNNEL.md §7 og 09_TJENESTEMENY.md §6.
+// All tekst kopiert ordrett fra 04_TEKST_ALLE_SIDER.md §9. Skjemafelt fra
+// 03_SALGSFUNNEL.md §9 ("Kan du bygge her?" — gratis førstevurdering).
+//
+// Netlify Forms-oppkobling følger samme mønster som /vi-tar-resten og
+// /egen-entreprenor (parallell ticket i samme runde): data-netlify="true",
+// netlify-honeypot="firmanavn" (Netlifys faktiske attributtnavn — ikke
+// data-netlify-honeypot), skjult form-name + segment, action="/takk".
+// Denne siden er ikke bundet til ett bestemt spor — den er hoved-CTA for
+// alle fire — så det finnes ikke noe segment-felt her, i motsetning til de
+// fire spor-bundne skjemaene.
+//
+// Svartid/utfører er ⚠️ BEKREFT i kilden (§9: "svartid og hvem som utfører").
+// Rutes gjennom faktaEllerPlassholder() på samme måte som /tomta-er-klar.
+import Side from '../layouts/Side.astro';
+import { faktaEllerPlassholder } from '../lib/bekreft';
+
+const svartid = faktaEllerPlassholder(null, 'Svartid og hvem som utfører, /kan-du-bygge-her');
+---
+
+<Side
+  title="noXcuse — Kan du bygge her?"
+  description="Gratis vurdering fra kart og reguleringsplan. Vi ser på tomta di og gir deg et kort skriftlig svar."
+>
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Kan du bygge her?</h1>
+      <p class="hero__ingress">
+        Den vanligste grunnen til at folk stopper opp, er ikke prisen. Det er at de ikke vet om
+        det går an å bygge der de vil bygge. Vi ser på kartet og reguleringsplanen, og gir deg et
+        kort skriftlig svar. Gratis.
+      </p>
+    </div>
+  </section>
+
+  {/* Hva du får svar på */}
+  <section class="svar reveal" data-reveal aria-labelledby="svar-h2">
+    <div class="svar__inner">
+      <h2 id="svar-h2" class="svar__h2">Hva du får svar på</h2>
+      <ol class="svar__liste">
+        <li>Hva reguleringsplanen tillater på akkurat din tomt</li>
+        <li>Om det er plass til en enhet innenfor utnyttelsesgrad og byggegrenser</li>
+        <li>Om adkomsten ser ut til å tåle trailer og kran</li>
+        <li>Hva som må undersøkes videre, og hvem som gjør det</li>
+      </ol>
+    </div>
+  </section>
+
+  {/* Hva du ikke får */}
+  <section class="ikke-far reveal" data-reveal aria-labelledby="ikke-far-h2">
+    <div class="ikke-far__inner">
+      <h2 id="ikke-far-h2" class="ikke-far__h2">Hva du ikke får</h2>
+      <p class="ikke-far__tekst">
+        Dette er en vurdering fra kart og planregister, ikke fra tomta. Vi kommer ikke ut, og vi
+        tar ikke grunnprøver. Trenger du en full gjennomgang med befaring og økonomi, har vi det
+        som egen tjeneste — den koster penger, og vi sier hva før du bestiller.
+      </p>
+    </div>
+  </section>
+
+  {/* Skjema — felt fra 03_SALGSFUNNEL.md §9 */}
+  <section class="skjema reveal" data-reveal aria-labelledby="skjema-h2">
+    <div class="skjema__inner">
+      <h2 id="skjema-h2" class="skjema__h2">Få en gratis vurdering av tomta</h2>
+
+      <form
+        class="skjema__form"
+        name="kan-du-bygge-her"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="firmanavn"
+        action="/takk"
+      >
+        <input type="hidden" name="form-name" value="kan-du-bygge-her" />
+
+        <div class="skjema__honeypot" aria-hidden="true">
+          <label for="firmanavn-kdbh">La stå tomt</label>
+          <input type="text" id="firmanavn-kdbh" name="firmanavn" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="navn-kdbh">Navn</label>
+          <input type="text" id="navn-kdbh" name="navn" autocomplete="name" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="epost-kdbh">E-post</label>
+          <input type="email" id="epost-kdbh" name="epost" autocomplete="email" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="telefon-kdbh">Telefon</label>
+          <input type="tel" id="telefon-kdbh" name="telefon" autocomplete="tel" />
+        </div>
+
+        {/* §9: "Minst ett av Adresse eller Gnr/bnr må fylles ut — uten det
+            finner vi ikke tomta. Valider på klient og server." Klientvalidering
+            (required på begge, eller JS-basert énav-to) er Fase 4-arbeid —
+            her merkes kravet tydelig i teksten under feltene, i tråd med
+            ticket-instruksen om å "labelle det tydelig". */}
+        <div class="skjema__felt">
+          <label for="adresse-kdbh">Adresse på tomta</label>
+          <input type="text" id="adresse-kdbh" name="adresse" autocomplete="street-address" />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="gnrbnr-kdbh">Gnr/bnr</label>
+          <input type="text" id="gnrbnr-kdbh" name="gnr-bnr" />
+          <p class="skjema__hjelpetekst">Fyll ut minst ett av adresse eller gnr/bnr — vi trenger det for å finne tomta.</p>
+        </div>
+
+        <div class="skjema__felt">
+          <label for="kommune-kdbh">Kommune</label>
+          <input type="text" id="kommune-kdbh" name="kommune" autocomplete="address-level2" required />
+        </div>
+
+        <fieldset class="skjema__fieldset">
+          <legend>Har du tomta i dag?</legend>
+          <label class="skjema__radio"><input type="radio" name="har-tomta" value="ja" required /> Ja</label>
+          <label class="skjema__radio"><input type="radio" name="har-tomta" value="ser-etter" /> Nei, ser etter</label>
+          <label class="skjema__radio"><input type="radio" name="har-tomta" value="arver-deler" /> Arver eller deler fra</label>
+        </fieldset>
+
+        <div class="skjema__samtykke">
+          <input type="checkbox" id="samtykke-kdbh" name="samtykke" required />
+          <label for="samtykke-kdbh">
+            Ja, noXcuse kan kontakte meg om denne henvendelsen. Vi lagrer opplysningene så lenge
+            det er nødvendig for å følge den opp, og deler dem ikke med andre enn selskapene som
+            er involvert i leveransen. Du kan be om innsyn eller sletting når som helst.
+          </label>
+        </div>
+
+        <button type="submit" class="skjema__knapp">Send meg vurderingen</button>
+
+        <p class="skjema__under">{svartid}</p>
+      </form>
+    </div>
+  </section>
+
+  {/* Avslutning */}
+  <section class="avslutning reveal" data-reveal aria-labelledby="avslutning-h2">
+    <div class="avslutning__inner">
+      <h2 id="avslutning-h2" class="avslutning__h2">
+        Går det ikke, sier vi det. Et nei du får nå, er billigere enn et nei du får etter at du
+        har kjøpt tomta.
+      </h2>
+    </div>
+  </section>
+</Side>
+
+<style>
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-6) var(--spacing-side-x) var(--spacing-rom-4);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 24ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .svar {
+    background-color: var(--color-lin);
+  }
+  .svar__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x);
+  }
+  .svar__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .svar__liste {
+    margin: 0;
+    padding-left: var(--spacing-rom-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+  .svar__liste li {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+  }
+
+  .ikke-far {
+    background-color: var(--color-bomull);
+  }
+  .ikke-far__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x);
+  }
+  .ikke-far__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .ikke-far__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+
+  .skjema {
+    background-color: var(--color-lin);
+  }
+  .skjema__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x) var(--spacing-rom-6);
+  }
+  .skjema__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .skjema__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-2);
+  }
+  .skjema__honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .skjema__felt {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+  .skjema__felt label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+  }
+  .skjema__felt input {
+    min-height: 48px;
+    padding: var(--spacing-rom-1) var(--spacing-rom-2);
+    border: 1px solid var(--color-kant-sterk);
+    border-radius: var(--radius-knapp);
+    background-color: var(--color-bomull);
+    color: var(--color-marine);
+    font-size: var(--text-brod);
+    font-family: var(--font-tekst);
+  }
+  .skjema__hjelpetekst {
+    font-size: var(--text-mikro);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+  .skjema__fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-rom-2);
+    border: 1px solid var(--color-kant-sterk);
+    border-radius: var(--radius-knapp);
+    padding: var(--spacing-rom-2);
+  }
+  .skjema__fieldset legend {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+    padding: 0 var(--spacing-rom-1);
+  }
+  .skjema__radio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-rom-1);
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+  }
+  .skjema__samtykke {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-rom-1);
+    margin-top: var(--spacing-rom-1);
+  }
+  .skjema__samtykke input {
+    margin-top: 0.3em;
+    flex-shrink: 0;
+  }
+  .skjema__samtykke label {
+    font-size: var(--text-mikro);
+    color: var(--color-marine-80);
+  }
+  .skjema__knapp {
+    min-height: 48px;
+    padding: var(--spacing-rom-2) var(--spacing-rom-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-knapp);
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-brod);
+    cursor: pointer;
+    transition: background-color var(--tid-nor) var(--ease-brand);
+  }
+  .skjema__knapp:hover {
+    background-color: color-mix(in srgb, var(--color-marine) 88%, black);
+  }
+  .skjema__under {
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+
+  .avslutning {
+    background-color: var(--color-marine);
+  }
+  .avslutning__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x);
+  }
+  .avslutning__h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-h3);
+    color: var(--color-bomull);
+    margin: 0;
+  }
+</style>

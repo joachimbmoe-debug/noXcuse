@@ -1,0 +1,218 @@
+---
+// `/kostnadsguiden` — spor 4 sin landingsside. Fase 3 steg 13. Bruker
+// Landing.astro (ingen hovednav — annonsemål, ingen distraksjon), se
+// 03_SALGSFUNNEL.md §6 og §7 punkt 1 (eneste lead magnet klar til lansering
+// i dag). All tekst kopiert ordrett fra 08_SEGMENTSIDER_TEKST.md §5, som er
+// segment 4 sin egen sidetekst (04_TEKST_ALLE_SIDER.md §10 har samme
+// H1/ingress/punktliste, men §5 er mer presis for akkurat denne ruten —
+// "Under knappen"-teksten og det valgfrie Hus/hytte-nedtrekket kommer
+// derfra).
+//
+// Skjema — 3 obligatoriske felt + 1 valgfritt, fra 03_SALGSFUNNEL.md §6:
+// Fornavn · E-post · Samtykke (+ valgfritt nedtrekk "Hus eller hytte?").
+// segmenter.ts har slug 'kostnadsguiden' = nr 4 → skjult felt segment="4".
+import Landing from '../layouts/Landing.astro';
+---
+
+<Landing
+  title="noXcuse — Hva koster et småhus egentlig?"
+  description="Ti sider om de tre leveransenivåene og de seks postene du må ordne selv. Gratis kostnadsguide."
+>
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Hva koster et småhus egentlig?</h1>
+      <p class="hero__ingress">
+        Ti sider om de tre leveransenivåene, hva som ligger i hvert av dem, og de seks postene du
+        må ordne selv. Skrevet slik at du kan bruke den uansett hvem du kjøper av.
+      </p>
+
+      <ul class="hero__liste">
+        <li>De tre leveransenivåene forklart, med hva som er med og hva som ikke er det</li>
+        <li>De seks postene som kommer i tillegg, og hva som avgjør prisen på hver</li>
+        <li>Tre spørsmål å stille enhver leverandør før du sammenligner priser</li>
+        <li>Hva «nøkkelferdig» og «fra»-priser faktisk betyr</li>
+      </ul>
+    </div>
+  </section>
+
+  {/* Skjema — 3 felt + valgfritt nedtrekk, se 03_SALGSFUNNEL.md §6 */}
+  <section class="skjema reveal" data-reveal aria-labelledby="skjema-h2">
+    <div class="skjema__inner">
+      <h2 id="skjema-h2" class="skjema__h2">Send meg kostnadsguiden</h2>
+
+      <form
+        class="skjema__form"
+        name="kostnadsguiden"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="firmanavn"
+        action="/takk"
+      >
+        <input type="hidden" name="form-name" value="kostnadsguiden" />
+        <input type="hidden" name="segment" value="4" />
+
+        <div class="skjema__honeypot" aria-hidden="true">
+          <label for="firmanavn-kg">La stå tomt</label>
+          <input type="text" id="firmanavn-kg" name="firmanavn" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="fornavn-kg">Fornavn</label>
+          <input type="text" id="fornavn-kg" name="fornavn" autocomplete="given-name" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="epost-kg">E-post</label>
+          <input type="email" id="epost-kg" name="epost" autocomplete="email" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="hus-hytte-kg">Hus eller hytte? <span class="skjema__valgfri">(valgfritt)</span></label>
+          <select id="hus-hytte-kg" name="hus-eller-hytte">
+            <option value="">Vil ikke si</option>
+            <option value="hus">Hus</option>
+            <option value="hytte">Hytte</option>
+          </select>
+        </div>
+
+        <div class="skjema__samtykke">
+          <input type="checkbox" id="samtykke-kg" name="samtykke" required />
+          <label for="samtykke-kg">
+            Ja, noXcuse kan kontakte meg om denne henvendelsen. Vi lagrer opplysningene så lenge
+            det er nødvendig for å følge den opp, og deler dem ikke med andre enn selskapene som
+            er involvert i leveransen. Du kan be om innsyn eller sletting når som helst.
+          </label>
+        </div>
+
+        <button type="submit" class="skjema__knapp">Send meg kostnadsguiden</button>
+
+        <p class="skjema__under">
+          Ingen kunstige frister. Ingen selger som ringer uten at du ber om det. Du får guiden og
+          fire korte e-poster, og du kan melde deg av i hver av dem.
+        </p>
+      </form>
+    </div>
+  </section>
+</Landing>
+
+<style>
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-6) var(--spacing-side-x) var(--spacing-rom-4);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 22ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__liste {
+    margin: 0;
+    padding-left: var(--spacing-rom-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+  .hero__liste li {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+  }
+
+  .skjema {
+    background-color: var(--color-lin);
+  }
+  .skjema__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x) var(--spacing-rom-6);
+  }
+  .skjema__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .skjema__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-2);
+  }
+  .skjema__honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .skjema__felt {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+  .skjema__felt label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+  }
+  .skjema__valgfri {
+    font-family: var(--font-tekst);
+    font-weight: 400;
+    color: var(--color-marine-80);
+  }
+  .skjema__felt input,
+  .skjema__felt select {
+    min-height: 48px;
+    padding: var(--spacing-rom-1) var(--spacing-rom-2);
+    border: 1px solid var(--color-kant-sterk);
+    border-radius: var(--radius-knapp);
+    background-color: var(--color-bomull);
+    color: var(--color-marine);
+    font-size: var(--text-brod);
+    font-family: var(--font-tekst);
+  }
+  .skjema__samtykke {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-rom-1);
+    margin-top: var(--spacing-rom-1);
+  }
+  .skjema__samtykke input {
+    margin-top: 0.3em;
+    flex-shrink: 0;
+  }
+  .skjema__samtykke label {
+    font-size: var(--text-mikro);
+    color: var(--color-marine-80);
+  }
+  .skjema__knapp {
+    min-height: 48px;
+    padding: var(--spacing-rom-2) var(--spacing-rom-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-knapp);
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-brod);
+    cursor: pointer;
+    transition: background-color var(--tid-nor) var(--ease-brand);
+  }
+  .skjema__knapp:hover {
+    background-color: color-mix(in srgb, var(--color-marine) 88%, black);
+  }
+  .skjema__under {
+    font-size: var(--text-mikro);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+</style>

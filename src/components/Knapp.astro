@@ -1,0 +1,99 @@
+---
+// Knapp — se DESIGN.md §6 og 02_DESIGNSYSTEM.md §6.
+// Fire varianter. Rendrer <a> når href finnes, ellers <button>.
+// 48px min-høyde gjelder de tre knappe-variantene (primaer/sekundaer/gull).
+// tekstlenke er bevisst unntatt — den er "i løpende tekst" per designsystemet,
+// og en 48px høy boks midt i en setning ville ødelagt tekstflyten. Se rapport.
+interface Props {
+  variant: 'primaer' | 'sekundaer' | 'gull' | 'tekstlenke';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+}
+
+const { variant, href, type = 'button', class: klasse, ...rest } = Astro.props as Props & Record<string, unknown>;
+const klasser = ['knapp', `knapp--${variant}`, klasse].filter(Boolean).join(' ');
+---
+
+{href ? (
+  <a href={href} class={klasser} {...rest}>
+    <slot />
+  </a>
+) : (
+  <button type={type} class={klasser} {...rest}>
+    <slot />
+  </button>
+)}
+
+<style>
+  .knapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-rom-1);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-brod);
+    line-height: 1.2;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color var(--tid-nor) var(--ease-brand),
+      color var(--tid-nor) var(--ease-brand),
+      border-color var(--tid-nor) var(--ease-brand);
+  }
+
+  /* Primær, sekundær og gull er ekte knapper — 48px berøringsflate, 4px hjørne */
+  .knapp--primaer,
+  .knapp--sekundaer,
+  .knapp--gull {
+    min-height: 48px;
+    padding: var(--spacing-rom-2) var(--spacing-rom-3);
+    border-radius: var(--radius-knapp);
+  }
+
+  .knapp--primaer {
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+  }
+  .knapp--primaer:hover {
+    background-color: color-mix(in srgb, var(--color-marine) 88%, black);
+  }
+
+  .knapp--sekundaer {
+    background-color: transparent;
+    color: var(--color-marine);
+    border-color: var(--color-kant-sterk);
+  }
+  .knapp--sekundaer:hover {
+    border-color: var(--color-marine);
+    background-color: color-mix(in srgb, var(--color-marine) 6%, transparent);
+  }
+
+  .knapp--gull {
+    background-color: var(--color-gull);
+    color: var(--color-marine);
+  }
+  .knapp--gull:hover {
+    background-color: color-mix(in srgb, var(--color-gull) 82%, white);
+  }
+
+  /* Tekstlenke — inline i løpende tekst, ikke en knapp-boks */
+  .knapp--tekstlenke {
+    display: inline;
+    min-height: auto;
+    padding: 0;
+    border: none;
+    background: none;
+    font-family: var(--font-tekst);
+    font-weight: 500;
+    color: var(--color-gull-dyp);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .knapp--tekstlenke:hover {
+    color: var(--color-marine);
+  }
+
+  /* Fokusring arves fra global.css (:focus-visible) — undertrykkes aldri her. */
+</style>

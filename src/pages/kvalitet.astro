@@ -1,0 +1,194 @@
+---
+// `/kvalitet` — Fase 3 steg 12. All tekst kopiert ordrett fra 04_TEKST_ALLE_SIDER.md §6.
+//
+// §6 gir seksjonsoverskrifter og korte instrukser om hva hver seksjon skal dekke,
+// men ikke alltid egen løpende brødtekst. Der §6 ikke gir egen setning, gjenbrukes
+// verbatim setninger som allerede finnes andre steder i kildefila om nøyaktig det
+// samme temaet (§1.6 forsidens kvalitetsseksjon, §14b som eksplisitt sier
+// "/kvalitet seksjon 6" skal bruke sin "Riktig — opplysning"-tekst). Ingen ny
+// markedsføringssetning er skrevet — se linje for linje under.
+//
+// - TEK17 og Byggemåten deler §1.6 sin todelte setning ("Huset bygges etter TEK17,
+//   akkurat som et hus reist på tomta." / "Forskjellen er at det bygges innendørs,
+//   under kontrollerte forhold, av folk som gjør det samme hver uke.") — de to
+//   leddene svarer nøyaktig til de to seksjonene §6 lister.
+// - SINTEF og Sentral godkjenning: §1.6 sine to punkter, ordrett.
+// - Energi: §1.6 sitt tredje punkt, ordrett. MANGLER.md #12 — mm og U-verdier
+//   finnes ikke, rutes gjennom faktaEllerPlassholder() (samme mønster som
+//   tomta-er-klar.astro sin "Svartid"-linje: ikke et config.ts-felt, alltid null).
+// - Hvem du har avtale med: §14b sin "Riktig — opplysning" + "Riktig — det som
+//   faktisk er vårt fortrinn"-tekst, som §14b-tabellen eksplisitt peker til denne
+//   seksjonen. Importselskapets navn via faktaEllerPlassholder(config.IMPORTSELSKAP).
+// - SINTEF TG-nummer + lenke: MANGLER.md #11, ikke bekreftet. Egen
+//   faktaEllerPlassholder()-linje, ikke et tall funnet på.
+// - Egen boks "Hvor huset lages": §6, verbatim.
+import Side from '../layouts/Side.astro';
+import { config } from '../config';
+import { faktaEllerPlassholder } from '../lib/bekreft';
+
+const importselskap = faktaEllerPlassholder(config.IMPORTSELSKAP, 'Importselskapets navn');
+const tgNummer = faktaEllerPlassholder(null, 'SINTEF TG-nummer og lenke til dokumentet');
+const veggOgUVerdier = faktaEllerPlassholder(null, 'Veggtykkelse i mm og U-verdier');
+---
+
+<Side
+  title="noXcuse — Dokumentert, ikke påstått"
+  description="Vi bruker ikke ord som «markedets beste». Vi bruker tall og dokumenter, og du kan be om å få se dem."
+>
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Dokumentert, ikke påstått</h1>
+      <p class="hero__ingress">
+        Vi bruker ikke ord som «markedets beste». Vi bruker tall og dokumenter, og du kan be om å
+        få se dem.
+      </p>
+    </div>
+  </section>
+
+  <section class="seksjoner reveal" data-reveal aria-label="Dokumentasjon">
+    <div class="seksjoner__inner">
+
+      {/* 1. TEK17 */}
+      <article class="punkt">
+        <h2 class="punkt__h2">TEK17</h2>
+        <p class="punkt__tekst">
+          Huset bygges etter TEK17, akkurat som et hus reist på tomta.
+        </p>
+      </article>
+
+      {/* 2. SINTEF Teknisk Godkjenning */}
+      <article class="punkt">
+        <h2 class="punkt__h2">SINTEF Teknisk Godkjenning</h2>
+        <p class="punkt__tekst">
+          SINTEF Teknisk Godkjenning på produktet, med årlige inspeksjoner av fabrikken.
+        </p>
+        <p class="punkt__bekreft">{tgNummer}</p>
+      </article>
+
+      {/* 3. Sentral godkjenning */}
+      <article class="punkt">
+        <h2 class="punkt__h2">Sentral godkjenning</h2>
+        <p class="punkt__tekst">Sentral godkjenning i Norge.</p>
+      </article>
+
+      {/* 4. Byggemåten */}
+      <article class="punkt">
+        <h2 class="punkt__h2">Byggemåten</h2>
+        <p class="punkt__tekst">
+          Forskjellen er at det bygges innendørs, under kontrollerte forhold, av folk som gjør
+          det samme hver uke.
+        </p>
+      </article>
+
+      {/* 5. Energi */}
+      <article class="punkt">
+        <h2 class="punkt__h2">Energi</h2>
+        <p class="punkt__tekst">
+          Lavenergi-byggemåte med tykkere vegger og tak enn minstekravet, som gir dokumentert
+          lavt energiforbruk.
+        </p>
+        <p class="punkt__bekreft">{veggOgUVerdier}</p>
+      </article>
+
+      {/* 6. Hvem du har avtale med — §14b, opplysning, ikke fordelspunkt */}
+      <article class="punkt">
+        <h2 class="punkt__h2">Hvem du har avtale med</h2>
+        <p class="punkt__tekst">
+          Kontrakten inngås med {importselskap}, som stiller garanti etter
+          bustadoppføringslova § 12. Du har 5 års reklamasjonsrett, slik loven krever ved
+          forbrukerkjøp av bolig.
+        </p>
+        <p class="punkt__tekst">
+          Én kontrakt, én garantiadresse. Du skal ikke måtte finne ut hvem av tre selskaper du
+          ringer.
+        </p>
+      </article>
+
+    </div>
+  </section>
+
+  {/* Egen boks: Hvor huset lages — §6, verbatim */}
+  <section class="hvor reveal" data-reveal aria-labelledby="hvor-h2">
+    <div class="hvor__inner">
+      <h2 id="hvor-h2" class="hvor__h2">Hvor huset lages</h2>
+      <p class="hvor__tekst">
+        Husene produseres av Husvik 3D SIA i Riga i Latvia. Vi kaller det ikke norsk produksjon,
+        for det er det ikke. Fabrikken har SINTEF Teknisk Godkjenning og inspiseres årlig — det
+        er dokumentasjonen som betyr noe for deg som kjøper.
+      </p>
+    </div>
+  </section>
+</Side>
+
+<style>
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-7) var(--spacing-side-x) var(--spacing-rom-5);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 20ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .seksjoner {
+    background-color: var(--color-lin);
+  }
+  .seksjoner__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-4);
+  }
+  .punkt__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .punkt__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+  .punkt__tekst:last-child {
+    margin-bottom: 0;
+  }
+  .punkt__bekreft {
+    font-size: var(--text-liten);
+    color: var(--color-gull-dyp);
+    margin: var(--spacing-rom-1) 0 0;
+  }
+
+  .hvor {
+    background-color: var(--color-bomull);
+  }
+  .hvor__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+    border-top: 2px solid var(--color-gull-sterk);
+  }
+  .hvor__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: var(--spacing-rom-3) 0 var(--spacing-rom-2);
+  }
+  .hvor__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0;
+  }
+</style>

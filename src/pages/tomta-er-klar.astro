@@ -1,0 +1,408 @@
+---
+// `/tomta-er-klar` — spor 1. Fase 3 steg 8, kundens tredje eksplisitte
+// sjekkpunkt. Kortest side på hele nettstedet — se 08_SEGMENTSIDER_TEKST.md §2:
+// "Denne kunden er ferdig med å lese."
+//
+// All tekst kopiert ordrett fra 08_SEGMENTSIDER_TEKST.md §2. §7-mikroteksten
+// ("Skal vi se på adkomsten?") er verbatim fra §7-tabellen (Sluttseksjon-CTA,
+// spor 1) og er her plassert som overskrift for adkomst-seksjonen — semantisk
+// samme tema (adkomst/trailer/kran) som §2 sin "Det ene vi må sjekke". Egen
+// tolkning av PLASSERING, ikke av ORDLYD — ordlyden selv er ikke endret.
+//
+// MOBILBUDSJETT (kundens hardeste krav her): prisen skal nås innen 3 skjermer
+// (360×740) fra toppen. Derfor brukes --spacing-rom-3/4 gjennomgående i stedet
+// for --spacing-seksjon-y (som er 64–128px og ville sprengt budsjettet alene).
+// Verifisert med reelt nettleseroppsett — se rapport for målemetode.
+//
+// Ingen "Seksjon: Modellene" her — ticketens strukturliste for denne siden
+// hopper fra Prisboks til skjema, og modellnavn/kvadratmeter/priser er uansett
+// ⚠️ BEKREFT (ingen src/data/modeller-fil finnes ennå). Ingen nedtrekk for
+// modellvalg i skjemaet av samme grunn — §2 sier eksplisitt "kun hvis
+// modellene finnes".
+//
+// Prisboks får inkludert/ikkeInkludert som tomme lister med vilje: siden har
+// allerede sin egen ordrette "Dette er med / Dette er ikke med"-seksjon rett
+// over (§2 sin egen tekst, ikke leveransenivaa.ts sin — ordlyden i §2 er en
+// annen enn den generiske nivå 2-beskrivelsen i data/leveransenivaa.ts). To
+// like lister med ulik ordlyd rett etter hverandre ville vært forvirrende og
+// kostet mobilbudsjettet unødig høyde.
+//
+// basisInkMva er null — ingen modellpris finnes å slå opp for denne generiske
+// siden (ikke bundet til én bestemt modell). beregnNivaa2Pris returnerer da
+// {belopInkMva: null, forklaring: null} umiddelbart (se prising.ts kommentar),
+// og Prisboks sin egen "ikke publisert"-fallback dekker resten. Riktig, ikke
+// en bug — se ticket-konteksten.
+import Side from '../layouts/Side.astro';
+import Prisboks from '../components/Prisboks.astro';
+import SegmentBytte from '../components/SegmentBytte.astro';
+import { beregnNivaa2Pris } from '../lib/prising';
+import { transportsoner } from '../data/transportsoner';
+import { faktaEllerPlassholder } from '../lib/bekreft';
+
+const prisResultat = beregnNivaa2Pris(null, null, transportsoner);
+
+// §2 "Under knappen": "⚠️ BEKREFT svartid." — ikke ferdig kundetekst, et
+// ubekreftet faktum. Rutes gjennom samme faktaEllerPlassholder()-mønster som
+// resten av siden (Footer, ModellKort) i stedet for å hardkode advarselstegnet
+// selv — viser plassholder i dev, stopper bygget i prod, se lib/bekreft.ts.
+const svartid = faktaEllerPlassholder(null, 'Svartid, spor 1 (tomta er klar)');
+---
+
+<Side
+  title="noXcuse — Tomta er klar. Da er dette enkelt."
+  description="Har du opparbeidet tomt og godkjenningene i orden? Få pris på huset levert og montert på fundamentet ditt."
+>
+  {/* Hero — kompakt, ingen CTA-knapper her. Dette er sidens korteste vei til prisen. */}
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Tomta er klar. Da er dette enkelt.</h1>
+      <p class="hero__ingress">
+        Du har opparbeidet tomt og godkjenningene i orden. Da trenger du ett tall: hva huset
+        koster levert på fundamentet ditt og satt ned.
+      </p>
+    </div>
+  </section>
+
+  {/* §2 Seksjon: Hva du får pris på */}
+  <section class="hva-far reveal" data-reveal aria-labelledby="hva-far-h2">
+    <div class="hva-far__inner">
+      <h2 id="hva-far-h2" class="hva-far__h2">Leveransenivå: levert og montert.</h2>
+      <p class="hva-far__def">
+        Huset ferdig bygget i Husviks fabrikk, kjørt til tomta di og satt ned på fundamentet du
+        har klart. Klart til bruk.
+      </p>
+
+      <div class="hva-far__lister">
+        <div class="hva-far__liste">
+          <p class="hva-far__liste-tittel">Dette er med:</p>
+          <ul>
+            <li>Huset komplett fra fabrikk</li>
+            <li>Transport til tomta</li>
+            <li>Montasje på ferdig fundament</li>
+            <li>Tilkobling til fremlagt vann, avløp, strøm og fiber</li>
+          </ul>
+        </div>
+
+        <div class="hva-far__liste">
+          <p class="hva-far__liste-tittel">Dette er ikke med — og du har det allerede:</p>
+          <ul>
+            <li>Fundament</li>
+            <li>Vann og avløp</li>
+            <li>Strøm og fiber</li>
+            <li>Tomt og offentlige gebyrer</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="hva-far__note">
+        Har du likevel noe av dette ugjort, hører du hjemme i ett av de andre sporene. Vi sier
+        fra hvis vi ser det.
+      </p>
+    </div>
+  </section>
+
+  {/* §2 Seksjon: Det ene vi må sjekke — §7 sluttseksjon-CTA brukt som overskrift her, se filkommentar */}
+  <section class="adkomst reveal" data-reveal aria-labelledby="adkomst-h2">
+    <div class="adkomst__inner">
+      <h2 id="adkomst-h2" class="adkomst__h2">Skal vi se på adkomsten?</h2>
+      <p class="adkomst__lead">Kommer trailer og kran fram?</p>
+      <p class="adkomst__tekst">
+        Det er det eneste som pleier å overraske kunder med ferdig tomt. En tomt som er fin å bo
+        på, er ikke alltid fin å kjøre et hus inn på. Vi ser på adkomsten før vi bekrefter
+        leveranse.
+      </p>
+    </div>
+  </section>
+
+  {/* Prisboks — nivå 2. Se filkommentar for hvorfor listene er tomme her. */}
+  <section class="pris reveal" data-reveal aria-label="Pris">
+    <div class="pris__inner">
+      <Prisboks
+        pris={{
+          nivaa: 'Levert og montert',
+          belopInkMva: prisResultat.belopInkMva,
+          inkludert: [],
+          ikkeInkludert: [],
+        }}
+      />
+      {prisResultat.forklaring && <p class="pris__forklaring">{prisResultat.forklaring}</p>}
+    </div>
+  </section>
+
+  {/* §2 Skjema — 4 felt. Statisk markup, ingen POST/validering (Fase 4). */}
+  <section class="skjema reveal" data-reveal aria-labelledby="skjema-h2">
+    <div class="skjema__inner">
+      <h2 id="skjema-h2" class="skjema__h2">Få pris på huset levert og montert</h2>
+      <p class="skjema__ingress">
+        Fire felt. Vi svarer med pris og leveransenivå, ikke med en oppfordring om å ta kontakt.
+      </p>
+
+      <form
+        class="skjema__form"
+        name="tomta-er-klar"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="firmanavn"
+        action="/takk"
+      >
+        <input type="hidden" name="form-name" value="tomta-er-klar" />
+        <input type="hidden" name="segment" value="1" />
+
+        {/* Honeypot — statisk markup, se §9 "Validering" i 03_SALGSFUNNEL.md.
+            Avvisningslogikken (Fase 4) kommer senere; feltet ligger klart her. */}
+        <div class="skjema__honeypot" aria-hidden="true">
+          <label for="firmanavn-1">La stå tomt</label>
+          <input type="text" id="firmanavn-1" name="firmanavn" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="navn-1">Navn</label>
+          <input type="text" id="navn-1" name="navn" autocomplete="name" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="telefon-1">Telefon</label>
+          <input type="tel" id="telefon-1" name="telefon" autocomplete="tel" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="epost-1">E-post</label>
+          <input type="email" id="epost-1" name="epost" autocomplete="email" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="adresse-1">Adresse på tomta</label>
+          <input type="text" id="adresse-1" name="adresse" autocomplete="street-address" required />
+        </div>
+
+        <div class="skjema__samtykke">
+          <input type="checkbox" id="samtykke-1" name="samtykke" required />
+          <label for="samtykke-1">
+            Ja, noXcuse kan kontakte meg om denne henvendelsen. Vi lagrer opplysningene så lenge
+            det er nødvendig for å følge den opp, og deler dem ikke med andre enn selskapene som
+            er involvert i leveransen. Du kan be om innsyn eller sletting når som helst.
+          </label>
+        </div>
+
+        <button type="submit" class="skjema__knapp">Send meg prisen</button>
+
+        <p class="skjema__svartid">{svartid}</p>
+      </form>
+    </div>
+  </section>
+
+  <SegmentBytte gjeldende="tomta-er-klar" />
+</Side>
+
+<style>
+  /* §2 er "kortest side på hele nettstedet" — rom-3/4 gjennomgående, aldri
+     --spacing-seksjon-y, se filkommentar øverst. */
+
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-4) var(--spacing-side-x) var(--spacing-rom-3);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 24ch;
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .hva-far {
+    background-color: var(--color-lin);
+  }
+  .hva-far__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-4) var(--spacing-side-x);
+  }
+  .hva-far__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .hva-far__def {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hva-far__lister {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-3);
+    margin-bottom: var(--spacing-rom-3);
+  }
+  @media (min-width: 640px) {
+    .hva-far__lister {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .hva-far__liste-tittel {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+  .hva-far__liste ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+  .hva-far__liste li {
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    padding-left: var(--spacing-rom-2);
+    border-left: 2px solid var(--color-kant-sterk);
+  }
+  .hva-far__note {
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .adkomst {
+    background-color: var(--color-bomull);
+  }
+  .adkomst__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-4) var(--spacing-side-x);
+  }
+  .adkomst__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .adkomst__lead {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-stor);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+  .adkomst__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .pris {
+    background-color: var(--color-lin);
+  }
+  .pris__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-4) var(--spacing-side-x);
+  }
+  .pris__forklaring {
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    margin: var(--spacing-rom-2) 0 0;
+  }
+
+  .skjema {
+    background-color: var(--color-bomull);
+  }
+  .skjema__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-4) var(--spacing-side-x) var(--spacing-rom-5);
+  }
+  .skjema__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+  .skjema__ingress {
+    font-size: var(--text-brod);
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .skjema__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-2);
+  }
+  .skjema__honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .skjema__felt {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+  .skjema__felt label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+  }
+  .skjema__felt input {
+    min-height: 48px;
+    padding: var(--spacing-rom-1) var(--spacing-rom-2);
+    border: 1px solid var(--color-kant-sterk);
+    border-radius: var(--radius-knapp);
+    background-color: var(--color-bomull);
+    color: var(--color-marine);
+    font-size: var(--text-brod);
+    font-family: var(--font-tekst);
+  }
+  .skjema__samtykke {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-rom-1);
+    margin-top: var(--spacing-rom-1);
+  }
+  .skjema__samtykke input {
+    margin-top: 0.3em;
+    flex-shrink: 0;
+  }
+  .skjema__samtykke label {
+    font-size: var(--text-mikro);
+    color: var(--color-marine-80);
+  }
+  .skjema__knapp {
+    min-height: 48px;
+    padding: var(--spacing-rom-2) var(--spacing-rom-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-knapp);
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-brod);
+    cursor: pointer;
+    transition: background-color var(--tid-nor) var(--ease-brand);
+  }
+  .skjema__knapp:hover {
+    background-color: color-mix(in srgb, var(--color-marine) 88%, black);
+  }
+  .skjema__svartid {
+    font-size: var(--text-mikro);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+</style>

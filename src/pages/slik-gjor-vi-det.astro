@@ -1,0 +1,106 @@
+---
+// `/slik-gjor-vi-det` — Fase 3 steg 12. All tekst kopiert ordrett fra
+// 04_TEKST_ALLE_SIDER.md §5. H1 og ingress er fra §5. De seks trinnene rendres av
+// <Prosess />, som allerede finnes og eksplisitt ble bygget for gjenbruk her (se
+// komponentens egen filkommentar). §5 gir ingen ytterligere "utdypet" tekst per
+// trinn utover det som allerede står i Prosess.astro (samme seks linjer som §1.7) —
+// derfor gjenbrukes komponenten som den er, uten å dikte opp ekstra brødtekst per
+// trinn. Prosess sin egen "Se hele prosessen"-knapp peker på denne siden (selvlenke);
+// det er komponentens eksisterende oppførsel og røres ikke her (komponenten er i
+// MUST NOT-lista).
+//
+// "Egen boks: Hvem du har avtale med" er verbatim fra §5. Importselskapets navn
+// rutes gjennom faktaEllerPlassholder() — config.IMPORTSELSKAP er null i dag.
+import Side from '../layouts/Side.astro';
+import Prosess from '../components/Prosess.astro';
+import { config } from '../config';
+import { faktaEllerPlassholder } from '../lib/bekreft';
+
+const importselskap = faktaEllerPlassholder(config.IMPORTSELSKAP, 'Importselskapets navn');
+---
+
+<Side
+  title="noXcuse — Slik gjør vi det"
+  description="Seks trinn fra første samtale til overtakelse. Du har én kontakt gjennom hele løpet."
+>
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Slik gjør vi det</h1>
+      <p class="hero__ingress">
+        Seks trinn fra første samtale til overtakelse. Du har én kontakt gjennom hele løpet.
+      </p>
+    </div>
+  </section>
+
+  <Prosess visCta={false} />
+
+  {/* Egen boks: Hvem du har avtale med — §5, verbatim */}
+  <section class="avtalepart reveal" data-reveal aria-labelledby="avtalepart-h2">
+    <div class="avtalepart__inner">
+      <h2 id="avtalepart-h2" class="avtalepart__h2">Hvem du har avtale med</h2>
+      <p class="avtalepart__tekst">
+        Du kjøper huset av noXcuse. Selve kontrakten inngås med {importselskap}, som også står
+        for import, transport og montasje. <strong>Én avtalepart for hele leveransen</strong> —
+        du skal ikke havne mellom to selskaper som peker på hverandre.
+      </p>
+      <p class="avtalepart__info">
+        Til opplysning: bustadoppføringslova gjelder ved forbrukerkjøp av bolig, med
+        garantistillelse etter § 12 og 5 års reklamasjonsrett.
+      </p>
+      <p class="avtalepart__tekst">
+        Vi sier alltid tydelig hvem som er avtalepart. Du skal ikke måtte lete etter det i
+        kontrakten.
+      </p>
+    </div>
+  </section>
+</Side>
+
+<style>
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-7) var(--spacing-side-x) var(--spacing-rom-5);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 20ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .avtalepart {
+    background-color: var(--color-lin);
+  }
+  .avtalepart__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .avtalepart__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .avtalepart__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .avtalepart__tekst:last-child {
+    margin-bottom: 0;
+  }
+  .avtalepart__info {
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+</style>

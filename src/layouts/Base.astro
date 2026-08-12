@@ -1,0 +1,76 @@
+---
+// Base.astro — se DESIGN.md og 01_BYGGEPLAN.md Fase 2/Fase 5.
+// <head>, skip-link (første fokuserbare element), Nav, <main id="hovedinnhold">, Footer.
+// Ingen hardkodet markedsføringstekst her — title/description kommer inn som props
+// fra sidene/lagene som bruker denne (Side.astro m.fl.).
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  // floatOverHero — videreført til Nav.astro (se der). Side.astro forblir urørt
+  // (kun title/description) — forsiden kaller derfor Base.astro direkte i stedet
+  // for gjennom Side.astro, for å holde blindringen på denne endringen liten.
+  floatOverHero?: boolean;
+}
+const { title, description, floatOverHero = false } = Astro.props as Props;
+---
+
+<html lang="nb" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    {/* Fjerner no-js umiddelbart hvis JS kjører. Kritisk for den flytende menyen
+        over forsidens fotohero (Nav.astro sin floatOverHero-prop): uten dette ville
+        .is-solid aldri bli satt, og menyen ville stått med lys tekst på lys
+        bomull-bakgrunn — se global.css sin .no-js .nav--over-låsing og Husviks
+        tilsvarende mekanikk (Kunder/Husvik/Nettside/index.html). Render-blokkerende
+        med hensikt: må kjøre før <body> males, ellers flasher menyen i feil tilstand. */}
+    <script is:inline>document.documentElement.classList.remove('no-js');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {/* Uten JS: .reveal-elementer skal aldri bli usynlige (01_BYGGEPLAN.md-prinsippet
+        "alt innhold synlig uten JS"). Med JS til stede overstyrer reveal.js dette ved å
+        legge til .er-synlig — inntil da/uten JS vinner denne regelen alltid. */}
+    <noscript>
+      <style>
+        .reveal { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <a href="#hovedinnhold" class="skip-link">Hopp til hovedinnhold</a>
+    <Nav floatOverHero={floatOverHero} />
+    <main id="hovedinnhold">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/reveal.js';
+      import '../scripts/hero-slideshow.js';
+    </script>
+  </body>
+</html>
+
+<style>
+  /* Skip-link — Fase 5, 01_BYGGEPLAN.md: første fokuserbare element, skjult inntil fokus */
+  .skip-link {
+    position: absolute;
+    left: var(--spacing-rom-2);
+    top: -100px;
+    z-index: 1000;
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+    padding: var(--spacing-rom-2) var(--spacing-rom-3);
+    border-radius: var(--radius-knapp);
+    text-decoration: none;
+    font-weight: 600;
+    transition: top var(--tid-nor) var(--ease-brand);
+  }
+  .skip-link:focus-visible {
+    top: var(--spacing-rom-2);
+  }
+</style>

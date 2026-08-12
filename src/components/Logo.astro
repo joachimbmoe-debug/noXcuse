@@ -1,0 +1,89 @@
+---
+// Logo — ordmerket noXcuse, gjenbrukt fra den eksisterende statiske siden
+// (../Nettside/DESIGN.md §3 "Logoregler — Variant C", besluttet 09.08.2026).
+// Instruks fra Joachim: bruk logoen fra Nettside/, ikke finn opp en ny.
+//
+// To flater bygget her — lys (nav, standard) og marine (footer, .on-dark).
+// Tredje tilfellet (nav flytende over fotohero, forsiden) er IKKE en egen
+// `flate`-verdi her — Nav.astro sin .nav--over/.is-solid-CSS overstyrer denne
+// komponentens interne klasser (.logo-word/.logo-roof/.logo-x) direkte med
+// :global(), siden fargene der er dynamiske (avhenger av scroll-tilstand, ikke
+// en statisk prop). Se Nav.astro for den faktiske fargelogikken i det tilfellet.
+//
+// Minstestørrelse: taklinjen skal skjules under 18px ordmerke-høyde. Ordmerket
+// står fast på 22px her og krysser aldri den grensen — @media (max-width: 360px)
+// beholdes likevel som beskyttelse, per kildens egen begrunnelse.
+interface Props {
+  flate?: 'lys' | 'marine';
+  class?: string;
+}
+const { flate = 'lys', class: klasse } = Astro.props as Props;
+---
+
+<span class={['logo', `logo--${flate}`, klasse].filter(Boolean).join(' ')}>
+  <svg class="logo-roof" viewBox="0 0 120 42" aria-hidden="true" focusable="false">
+    <path
+      d="M8 40 L60 6 L112 40"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="7"
+      stroke-linecap="square"
+      stroke-linejoin="miter"
+    />
+  </svg>
+  <span class="logo-word">no<span class="logo-x">X</span>cuse</span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    line-height: 1;
+  }
+
+  .logo-roof {
+    display: block;
+    width: 64px;
+    height: 22px;
+    margin-bottom: 2px;
+  }
+
+  .logo-word {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-x {
+    font-weight: 800;
+  }
+
+  /* Lys flate (standard) — taklinje og X i gull-sterk (kontrastunntatt dekor,
+     ALDRI løpende tekst), ordmerket i marine tekst. */
+  .logo--lys .logo-roof,
+  .logo--lys .logo-x {
+    color: var(--color-gull-sterk);
+  }
+  .logo--lys .logo-word {
+    color: var(--color-marine);
+  }
+
+  /* Marine flate (footer) — hele lockupen i lys gull. En marine X på flat
+     marine bunn ville vært usynlig, derfor gull, ikke marine, her. */
+  .logo--marine .logo-roof,
+  .logo--marine .logo-word,
+  .logo--marine .logo-x {
+    color: var(--color-gull);
+  }
+
+  /* Minstestørrelse — se DESIGN.md-notatet over. Ordmerket krysser aldri denne
+     grensen i praksis ved dagens faste 22px, men beholdes som beskyttelse. */
+  @media (max-width: 360px) {
+    .logo-roof {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,500 @@
+---
+// Modell-mal `/modeller/[slug]` — fase 3 steg 10, 01_BYGGEPLAN.md.
+// "Én mal, mange innganger. Nye modeller legges inn som datafiler uten at
+// strukturen røres." (04_TEKST_ALLE_SIDER.md §3).
+//
+// getStaticPaths leser src/data/modeller/*.json. En 4. modell = én ny JSON-fil
+// der, null endring i denne fila eller i index.astro.
+//
+// Strukturen følger §3 sin egen 9-delte liste ordrett:
+// 1 Hero  2 Prisboks×3  3 Hva som er med i huset  4 Hva du ordner selv
+// 5 Plantegning  6 Tekniske data  7 Bildegalleri  8 CTA-blokk  9 Andre modeller
+//
+// Prisene i Prisboks×3 kommer ALDRI fra en priser-liste i JSON-fila (den finnes
+// ikke, se datashape-kommentar i JSON-filene) — de syntetiseres friskt fra
+// src/data/leveransenivaa.ts per nivå, med belopInkMva alltid null, fordi ingen
+// ekte modellpris finnes ennå. Samme mønster som src/pages/tomta-er-klar.astro.
+//
+// Punkt 3 "Hva som er med i huset" og punkt 6 "Tekniske data" har ingen
+// modellspesifikk kildetekst å hente fra ennå (Husvik har ikke levert
+// spesifikasjoner, se MANGLER.md #12 og §5–6). Feltnavnene i tekniske data-
+// tabellen (BRA, BYA, mønehøyde, veggtykkelse, U-verdier, oppvarming,
+// ventilasjon) er hentet ordrett fra 01_BYGGEPLAN.md fase 3 steg 10 punkt 6 —
+// ingen VERDIER er funnet på, bare feltnavnene i seg selv, som en ærlig
+// tom-tilstand (ikke en tabell med tomme celler, se ticket-instruks).
+//
+// Plantegning og bildegalleri: samme ærlige plassholderboks-mønster som
+// ModellKort.astro sin bildeboks (❐ + tekst) — aldri stockfoto, aldri KI, aldri
+// et skjermbilde av en Husvik-tegning (se CLAUDE.md "Absolutte forbud").
+import Side from '../../layouts/Side.astro';
+import Knapp from '../../components/Knapp.astro';
+import Prisboks from '../../components/Prisboks.astro';
+import OrdnerSelv from '../../components/OrdnerSelv.astro';
+import ModellKort from '../../components/ModellKort.astro';
+import { leveransenivaa } from '../../data/leveransenivaa';
+import { faktaEllerPlassholder } from '../../lib/bekreft';
+
+interface Modell {
+  slug: string;
+  navn: string | null;
+  kvadratmeter: number | null;
+  kategori: 'helaarsbolig' | 'hytte' | 'utleieenhet';
+  romfordeling: string | null;
+  tekniskeData: Record<string, string | null>;
+  plantegning: string | null;
+}
+
+const kategoriEtikett: Record<Modell['kategori'], string> = {
+  helaarsbolig: 'Helårsbolig',
+  hytte: 'Hytte',
+  utleieenhet: 'Utleieenhet',
+};
+
+// Feltnavnene i tekniske data-tabellen — ordrett fra 01_BYGGEPLAN.md fase 3
+// steg 10 punkt 6. Kun navnene, aldri verdier — se filkommentar øverst.
+const tekniskeFeltnavn = [
+  'BRA',
+  'BYA',
+  'Mønehøyde',
+  'Veggtykkelse',
+  'U-verdier',
+  'Oppvarming',
+  'Ventilasjon',
+];
+
+export async function getStaticPaths() {
+  const moduler = import.meta.glob<{ default: Modell }>('../../data/modeller/*.json', {
+    eager: true,
+  });
+  const alleModeller = Object.values(moduler)
+    .map((modul) => modul.default)
+    .sort((a, b) => a.slug.localeCompare(b.slug));
+
+  return alleModeller.map((modell) => ({
+    params: { slug: modell.slug },
+    props: { modell, alleModeller },
+  }));
+}
+
+interface Props {
+  modell: Modell;
+  alleModeller: Modell[];
+}
+
+const { modell, alleModeller } = Astro.props as Props;
+
+const navnVerdi = faktaEllerPlassholder(modell.navn, 'Modellnavn');
+const kvmVerdi = faktaEllerPlassholder(
+  modell.kvadratmeter !== null ? String(modell.kvadratmeter) : null,
+  'Kvadratmeter'
+);
+const romfordelingVerdi = faktaEllerPlassholder(modell.romfordeling, 'Romfordeling');
+const hvaErMedVerdi = faktaEllerPlassholder(null, 'Hva som er med i huset');
+
+const tekniskeDataFinnes = Object.keys(modell.tekniskeData).length > 0;
+
+const andreModeller = alleModeller.filter((m) => m.slug !== modell.slug);
+---
+
+<Side
+  title={`noXcuse — ${modell.navn ?? 'Modell (navn ikke bekreftet)'}`}
+  description="Komplette boenheter inntil 49 m². Alle bygges ferdig i fabrikk og leveres på trailer. Alle priser står med leveransenivå."
+>
+  {/* 1. Hero */}
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <div class="hero__bilde" role="img" aria-label="Plassholder — modellbilde fra Husvik er ikke levert ennå">
+        <span aria-hidden="true">❐</span>
+        <span>Bilde kommer</span>
+      </div>
+      <p class="hero__kategori">{kategoriEtikett[modell.kategori]}</p>
+      <h1 id="hero-h1" class="hero__h1">{navnVerdi}</h1>
+      <p class="hero__linje">{kvmVerdi} m² · {romfordelingVerdi}</p>
+    </div>
+  </section>
+
+  {/* 2. Prisboks × 3 */}
+  <section class="priser reveal" data-reveal aria-labelledby="priser-h2">
+    <div class="priser__inner">
+      <h2 id="priser-h2" class="priser__h2">Tre priser, tre leveransenivåer</h2>
+      <p class="priser__ingress">
+        Tre priser, tre leveransenivåer. Det som ikke er med i et nivå, står under prisen.
+      </p>
+      <div class="priser__grid">
+        {
+          leveransenivaa.map((nivaa) => (
+            <Prisboks
+              pris={{
+                nivaa: nivaa.navn,
+                belopInkMva: null,
+                inkludert: nivaa.inkludert,
+                ikkeInkludert: nivaa.ikkeInkludert,
+              }}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 3. Hva som er med i huset */}
+  <section class="hva-med reveal" data-reveal aria-labelledby="hva-med-h2">
+    <div class="hva-med__inner">
+      <h2 id="hva-med-h2" class="hva-med__h2">Hva som er med i huset</h2>
+      <p class="hva-med__tekst">{hvaErMedVerdi}</p>
+    </div>
+  </section>
+
+  {/* 4. Hva du ordner selv — samme seks poster på hver modellside */}
+  <OrdnerSelv />
+
+  {/* 5. Plantegning */}
+  <section class="plantegning reveal" data-reveal aria-labelledby="plantegning-h2">
+    <div class="plantegning__inner">
+      <h2 id="plantegning-h2" class="plantegning__h2">Plantegning</h2>
+      <div class="plantegning__boks" role="img" aria-label="Plassholder — plantegning er ikke levert ennå">
+        <span aria-hidden="true">❐</span>
+        <span>Plantegning kommer</span>
+      </div>
+    </div>
+  </section>
+
+  {/* 6. Tekniske data */}
+  <section class="tekniske-data reveal" data-reveal aria-labelledby="tekniske-data-h2">
+    <div class="tekniske-data__inner">
+      <h2 id="tekniske-data-h2" class="tekniske-data__h2">Tekniske data</h2>
+      {
+        tekniskeDataFinnes ? (
+          <table class="tekniske-data__tabell">
+            <tbody>
+              {Object.entries(modell.tekniskeData).map(([felt, verdi]) => (
+                <tr>
+                  <th scope="row">{felt}</th>
+                  <td>{verdi ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p class="tekniske-data__tomt">
+            Tekniske data ({tekniskeFeltnavn.join(', ')}) er ikke bekreftet ennå. Vi publiserer
+            dem når de er klare.
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  {/* 7. Bildegalleri */}
+  <section class="galleri reveal" data-reveal aria-labelledby="galleri-h2">
+    <div class="galleri__inner">
+      <h2 id="galleri-h2" class="galleri__h2">Bilder</h2>
+      <div class="galleri__grid">
+        {
+          [1, 2, 3].map((n) => (
+            <div
+              class="galleri__boks"
+              role="img"
+              aria-label={`Plassholder — bilde ${n} fra Husvik er ikke levert ennå`}
+            >
+              <span aria-hidden="true">❐</span>
+              <span>Bilde kommer</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 8. CTA-blokk */}
+  <section class="cta reveal" data-reveal aria-labelledby="cta-h2">
+    <div class="cta__inner">
+      <h2 id="cta-h2" class="cta__h2">Skal vi se på tomta di?</h2>
+      <p class="cta__tekst">
+        Den vanligste grunnen til at folk ikke kommer videre, er at de ikke vet om det går an å
+        bygge der de vil bygge. Det finner vi ut sammen.
+      </p>
+      <div class="cta__knapper">
+        <Knapp variant="primaer" href="/kan-du-bygge-her">Kan du bygge her? Få en gratis førstevurdering</Knapp>
+        <Knapp variant="sekundaer" href="/befaring">Book befaring</Knapp>
+      </div>
+    </div>
+  </section>
+
+  {/* 9. Andre modeller */}
+  {
+    andreModeller.length > 0 && (
+      <section class="andre reveal" data-reveal aria-labelledby="andre-h2">
+        <div class="andre__inner">
+          <h2 id="andre-h2" class="andre__h2">Andre modeller</h2>
+          <div class="andre__grid">
+            {andreModeller.map((m) => (
+              <ModellKort
+                navn={m.navn}
+                kvadratmeter={m.kvadratmeter}
+                bildeAlt="Plassholder — modellbilde fra Husvik er ikke levert ennå"
+                href={`/modeller/${m.slug}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Side>
+
+<style>
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-6) var(--spacing-side-x) var(--spacing-rom-5);
+  }
+  .hero__bilde {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-rom-1);
+    aspect-ratio: 16 / 9;
+    background-color: var(--color-lin);
+    color: var(--color-marine-80);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    border-radius: var(--radius-kort);
+    margin-bottom: var(--spacing-rom-4);
+  }
+  .hero__bilde span:first-child {
+    font-size: 2.5rem;
+  }
+  .hero__kategori {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-mikro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gull-dyp);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-feil);
+    max-width: 24ch;
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .hero__linje {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+
+  .priser {
+    background-color: var(--color-lin);
+  }
+  .priser__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .priser__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .priser__ingress {
+    font-size: var(--text-brod);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+  .priser__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-3);
+  }
+  @media (min-width: 900px) {
+    .priser__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hva-med {
+    background-color: var(--color-bomull);
+  }
+  .hva-med__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x);
+  }
+  .hva-med__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .hva-med__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-feil);
+    margin: 0;
+  }
+
+  .plantegning {
+    background-color: var(--color-bomull);
+  }
+  .plantegning__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .plantegning__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .plantegning__boks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-rom-1);
+    aspect-ratio: 4 / 3;
+    max-width: 480px;
+    background-color: var(--color-lin);
+    color: var(--color-marine-80);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    border-radius: var(--radius-kort);
+  }
+  .plantegning__boks span:first-child {
+    font-size: 1.75rem;
+  }
+
+  .tekniske-data {
+    background-color: var(--color-lin);
+  }
+  .tekniske-data__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .tekniske-data__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .tekniske-data__tomt {
+    font-size: var(--text-brod);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+  .tekniske-data__tabell {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tekniske-data__tabell th,
+  .tekniske-data__tabell td {
+    text-align: left;
+    padding: var(--spacing-rom-1) var(--spacing-rom-2) var(--spacing-rom-1) 0;
+    border-bottom: 1px solid var(--color-kant);
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+  }
+  .tekniske-data__tabell th {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .galleri {
+    background-color: var(--color-bomull);
+  }
+  .galleri__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .galleri__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .galleri__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-3);
+  }
+  @media (min-width: 640px) {
+    .galleri__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .galleri__boks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-rom-1);
+    aspect-ratio: 4 / 3;
+    background-color: var(--color-lin);
+    color: var(--color-marine-80);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    border-radius: var(--radius-kort);
+  }
+  .galleri__boks span:first-child {
+    font-size: 1.75rem;
+  }
+
+  .cta {
+    background-color: var(--color-lin);
+  }
+  .cta__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+    text-align: center;
+  }
+  .cta__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .cta__tekst {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+  .cta__knapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-rom-2);
+  }
+
+  .andre {
+    background-color: var(--color-bomull);
+  }
+  .andre__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .andre__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .andre__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-3);
+  }
+  @media (min-width: 640px) {
+    .andre__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,24 @@
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+*-debug.log*
+
+# environment variables
+.env
+.env.*
+
+# macOS / editor
+.DS_Store
+.idea/
+
+# kildefiler — originalfoto og skjermdumper, 58 MB.
+# Holdes utenfor git: historikken tar vare på hver versjon for alltid,
+# også etter at filen er slettet.
+_kilder/

@@ -1,0 +1,357 @@
+---
+// Nav — se DESIGN.md §9 og 04_TEKST_ALLE_SIDER.md §Globalt/Navigasjon.
+// Lenketekst og rekkefølge kopiert ordrett derfra.
+//
+// Hamburger-mekanisme: native <details>/<summary> — bevisst valg, ikke JS.
+// - Åpne/lukke fungerer helt uten JavaScript (progressiv forbedring, samme
+//   prinsipp som resten av prosjektet — se 01_BYGGEPLAN.md Fase 4).
+// - <summary> har implisitt knapp-rolle og ekspandert/kollapset tilstand i
+//   moderne nettlesere/skjermlesere, uten at vi trenger å administrere
+//   aria-expanded selv med JS.
+// - Fokusring arves fra global.css sin :focus-visible — aldri undertrykt.
+// - Brytepunkt: 1024px. 02_DESIGNSYSTEM.md §9 og 04_TEKST_ALLE_SIDER.md §Globalt
+//   sier begge eksplisitt "hamburger under 1024px". DESIGN.md §9 (Fase 1) noterer
+//   en uavklart 900px-referanse fra den generelle CLAUDE.md-fila, men den fila
+//   beskriver den gamle statiske noXcuse-siden i ../Nettside/, ikke denne
+//   Astro-gjenoppbygningen. 1024px er riktig her.
+import Knapp from './Knapp.astro';
+import Logo from './Logo.astro';
+
+// floatOverHero — ny, valgfri prop lagt til 2026-08-12 på Joachims eksplisitte
+// instruks ("samme type hero som på Husvik siden med full bredde karusell med
+// menyen gjennomsiktig oppå"). Portert fra Husviks .nav--over-mekanikk
+// (../Husvik/Nettside/css/style.css og js/site.js). Default false: alle 16
+// andre sider beholder nøyaktig steg-15-oppførselen (sticky, alltid solid).
+// Brukes KUN på forsiden sin <Nav floatOverHero /> foran fotoheroen.
+interface Props {
+  floatOverHero?: boolean;
+}
+const { floatOverHero = false } = Astro.props as Props;
+
+const lenker = [
+  { href: '/modeller', label: 'Modeller' },
+  { href: '/hva-koster-det', label: 'Hva koster det' },
+  { href: '/slik-gjor-vi-det', label: 'Slik gjør vi det' },
+  { href: '/kvalitet', label: 'Kvalitet' },
+  { href: '/om-oss', label: 'Om oss' },
+];
+---
+
+<header class={['nav', floatOverHero && 'nav--over'].filter(Boolean).join(' ')} data-nav={floatOverHero ? true : undefined}>
+  <div class="nav__inner">
+    <a href="/" class="nav__logo" aria-label="noXcuse — til forsiden"><Logo flate="lys" /></a>
+
+    <details class="nav__toggle">
+      <summary class="nav__toggle-btn" aria-label="Åpne meny">
+        <span class="nav__hamburger" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </summary>
+
+      <nav class="nav__panel" aria-label="Hovedmeny">
+        <div class="nav__cta">
+          <Knapp variant="primaer" href="/befaring">Book befaring</Knapp>
+        </div>
+        <ul class="nav__list">
+          {lenker.map((l) => (
+            <li><a href={l.href}>{l.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  // Sticky nav — bakgrunn+skygge-tilstand etter 40px scroll (02_DESIGNSYSTEM.md §5,
+  // punkt 3). Nav er allerede fullt lesbar uten dette (fast bomull-bakgrunn og
+  // border-bottom fra CSS-en under, uansett JS-tilstand) — skriptet legger kun til
+  // .nav--scrolled som skygge-forsterkning, det er aldri en forutsetning for lesbarhet.
+  const nav = document.querySelector('.nav');
+  if (nav) {
+    const oppdaterSkygge = () => {
+      nav.classList.toggle('nav--scrolled', window.scrollY > 40);
+    };
+    oppdaterSkygge();
+    window.addEventListener('scroll', oppdaterSkygge, { passive: true });
+  }
+
+  // Flytende meny over fotohero (kun forsiden, floatOverHero-proppen over).
+  // Portert fra Husviks updateNavState i js/site.js: naven blir solid når
+  // heroens bunnkant har passert menyhøyden. Kalles direkte ved scroll/resize/
+  // visibilitychange — IKKE via requestAnimationFrame. Grunnen (fra Husviks
+  // egen kommentar): en rAF-callback kjører ikke mens fanen er skjult, og et
+  // "ticking"-flagg som bare nullstilles inne i callbacken ville da blitt
+  // stående true for alltid og fryse menyen i feil tilstand. Én rect-lesning
+  // per scroll-hendelse er billig nok til å gjøre direkte.
+  const overNav = document.querySelector('.nav--over[data-nav]');
+  const navHeroEl = overNav && document.querySelector('.hero');
+  if (overNav && navHeroEl) {
+    const oppdaterNavTilstand = () => {
+      const heroBottom = navHeroEl.getBoundingClientRect().bottom;
+      overNav.classList.toggle('is-solid', heroBottom <= overNav.offsetHeight);
+    };
+    window.addEventListener('scroll', oppdaterNavTilstand, { passive: true });
+    window.addEventListener('resize', oppdaterNavTilstand);
+    document.addEventListener('visibilitychange', oppdaterNavTilstand);
+    oppdaterNavTilstand();
+  }
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-bomull);
+    border-bottom: 1px solid var(--color-kant);
+    box-shadow: 0 0 0 0 transparent;
+    transition: box-shadow var(--tid-nor) var(--ease-brand), border-color var(--tid-nor) var(--ease-brand);
+  }
+
+  .nav--scrolled {
+    border-bottom-color: transparent;
+    box-shadow: var(--shadow-skygge);
+  }
+
+  .nav__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding-inline: var(--spacing-side-x);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 72px;
+    gap: var(--spacing-rom-3);
+  }
+
+  .nav__logo {
+    display: inline-flex;
+    text-decoration: none;
+  }
+  .nav__logo :global(.logo-word),
+  .nav__logo :global(.logo-roof),
+  .nav__logo :global(.logo-x) {
+    transition: color var(--tid-nor) var(--ease-brand);
+  }
+
+  /* Hamburger-knapp (summary) */
+  .nav__toggle {
+    display: block;
+  }
+
+  .nav__toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    list-style: none;
+    border-radius: var(--radius-knapp);
+  }
+  .nav__toggle-btn::-webkit-details-marker {
+    display: none;
+  }
+  .nav__toggle-btn::marker {
+    content: '';
+  }
+
+  .nav__hamburger {
+    position: relative;
+    width: 24px;
+    height: 16px;
+  }
+  .nav__hamburger span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--color-marine);
+    transition: transform var(--tid-nor) var(--ease-brand), opacity var(--tid-nor) var(--ease-brand);
+  }
+  .nav__hamburger span:nth-child(1) { top: 0; }
+  .nav__hamburger span:nth-child(2) { top: 7px; }
+  .nav__hamburger span:nth-child(3) { top: 14px; }
+
+  .nav__toggle[open] .nav__hamburger span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav__toggle[open] .nav__hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav__toggle[open] .nav__hamburger span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobilpanel — vises kun når <details> er åpen. Ingen egen display-regel
+     for lukket tilstand her: den native UA-standarden (details:not([open]) > *
+     { display: none }) skal styre det, ellers overstyrer forfatterstil den. */
+  .nav__toggle[open] > .nav__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-3);
+    padding: var(--spacing-rom-3) var(--spacing-side-x) var(--spacing-rom-4);
+    border-top: 1px solid var(--color-kant);
+  }
+
+  .nav__cta {
+    order: -1;
+  }
+
+  .nav__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-2);
+    margin: 0;
+    padding: 0;
+  }
+  .nav__list a {
+    display: block;
+    padding: var(--spacing-rom-1) 0;
+    color: var(--color-marine);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .nav__list a:hover {
+    color: var(--color-gull-dyp);
+  }
+
+  @media (min-width: 1024px) {
+    .nav__toggle-btn {
+      display: none;
+    }
+
+    .nav__toggle {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Tvinger panelet synlig som rad uansett åpen/lukket-tilstand på desktop */
+    .nav__panel,
+    .nav__toggle[open] > .nav__panel {
+      display: flex !important;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--spacing-rom-4);
+      padding: 0;
+      border-top: 0;
+    }
+
+    .nav__list {
+      flex-direction: row;
+      gap: var(--spacing-rom-4);
+    }
+    .nav__list a {
+      padding: var(--spacing-rom-1) 0;
+    }
+
+    .nav__cta {
+      order: 1;
+    }
+  }
+
+  /* ---------- Flytende meny over fotohero (floatOverHero-prop, kun forsiden) ----------
+     Portert fra Husviks .nav--over/.nav--over.is-solid (Kunder/Husvik/Nettside/css/
+     style.css, linje ~209-261). Andre 16 sider bruker ikke .nav--over og er uendret. */
+  .nav--over {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+    border-bottom-color: transparent;
+    box-shadow: none;
+  }
+
+  .nav--over .nav__hamburger span {
+    background-color: var(--color-bomull);
+  }
+  .nav--over .nav__list a {
+    color: var(--color-bomull);
+  }
+  .nav--over .nav__list a:hover {
+    color: var(--color-gull);
+  }
+  /* Logo over fotohero — Joachims eksplisitte instruks 2026-08-12: ord og tak
+     i gull, X i marine når naven er gjennomsiktig oppå heroen. Motsatt for
+     ord/X (ikke tak) i solid-tilstanden lenger ned. Reacher inn i Logo.astro
+     sine interne klasser med :global() — samme teknikk som no-js-regelen
+     under, siden Logo er en egen scopet komponent. */
+  .nav--over .nav__logo :global(.logo-word),
+  .nav--over .nav__logo :global(.logo-roof) {
+    color: var(--color-gull);
+  }
+  .nav--over .nav__logo :global(.logo-x) {
+    color: var(--color-bomull);
+  }
+
+  /* Solid tilstand — nås enten ved scroll forbi heroen (JS i <script> over,
+     .is-solid) ELLER når mobilpanelet er åpent, uansett scrollposisjon.
+     Sistnevnte er samme prinsipp som Husviks alltid-solide mobildropdown
+     (.nav-links { background: #f7f4ef } uavhengig av .nav--over/.is-solid):
+     en gjennomsiktig meny med lys tekst ville vært ulesbar der panelet
+     folder seg ut over vilkårlig fotoinnhold. */
+  .nav--over.is-solid,
+  .nav--over:has(.nav__toggle[open]) {
+    position: fixed;
+    background-color: var(--color-bomull);
+    border-bottom-color: var(--color-kant);
+    box-shadow: var(--shadow-skygge);
+  }
+  .nav--over.is-solid .nav__hamburger span,
+  .nav--over:has(.nav__toggle[open]) .nav__hamburger span {
+    background-color: var(--color-marine);
+  }
+  .nav--over.is-solid .nav__list a,
+  .nav--over:has(.nav__toggle[open]) .nav__list a {
+    color: var(--color-marine);
+  }
+  .nav--over.is-solid .nav__list a:hover,
+  .nav--over:has(.nav__toggle[open]) .nav__list a:hover {
+    color: var(--color-gull-dyp);
+  }
+  /* Solid tilstand: ord og X bytter farge (motsatt av over-hero-tilstanden),
+     taket beholder gull uendret — bevisst unntak fra fargesystemets "aldri
+     gull-marine (E3CEA4) på lys flate"-regel (1,5:1 kontrast). Joachim bekreftet
+     eksplisitt at dette skal stå slik til tross for regelen. Dokumentert i
+     .foreman/ledger.md. */
+  .nav--over.is-solid .nav__logo :global(.logo-word),
+  .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-word) {
+    color: var(--color-marine);
+  }
+  .nav--over.is-solid .nav__logo :global(.logo-x),
+  .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-x) {
+    color: var(--color-gull);
+  }
+
+  /* Uten JS blir .is-solid aldri satt, og menyen ville stått med lys tekst på
+     transparent/lys bomull-bakgrunn — langt under AA-kravet på 4,5:1. Låses
+     derfor til den solide/mørke varianten når no-js-klassen er til stede på
+     <html> (fjernes av inline-scriptet i Base.astro så snart JS kjører).
+     Portert fra Husviks tilsvarende .no-js .nav--over-regel (Kunder/Husvik/
+     Nettside/css/style.css). :global(.no-js) holder KUN det leddet uscopet —
+     <html> er utenfor Nav.astro sitt DOM-tre og får aldri komponentens
+     data-astro-cid-attributt, så uten :global() ville selektoren aldri
+     matchet noe (se global.css sin forklarende kommentar for hvorfor dette
+     ikke kan ligge der i stedet). */
+  :global(.no-js) .nav--over {
+    position: fixed;
+    background-color: var(--color-bomull);
+    border-bottom-color: var(--color-kant);
+    box-shadow: var(--shadow-skygge);
+  }
+  :global(.no-js) .nav--over .nav__hamburger span {
+    background-color: var(--color-marine);
+  }
+  :global(.no-js) .nav--over .nav__list a {
+    color: var(--color-marine);
+  }
+  :global(.no-js) .nav--over .nav__logo :global(.logo-word) {
+    color: var(--color-marine);
+  }
+  :global(.no-js) .nav--over .nav__logo :global(.logo-x) {
+    color: var(--color-gull);
+  }
+</style>

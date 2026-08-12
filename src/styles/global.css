@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+/* Tailwind 4 navngir tokens med et strukturelt prefiks per namespace
+   (--color-, --text-, --spacing-, --radius-, --shadow-, --ease-).
+   Identitetsnavnet etter prefikset er uendret fra 02_DESIGNSYSTEM.md —
+   f.eks. --gull-dyp der lever videre som --color-gull-dyp. Se DESIGN.md §0. */
+@theme {
+  /* 1. Farger — se DESIGN.md §1 for kontrastmålinger */
+  --color-bomull: #FAF8F2;
+  --color-lin: #F0ECE4;
+  --color-marine: #172E57;
+  --color-marine-80: #45577c;
+  --color-gull: #E3CEA4;
+  --color-gull-sterk: #C69739; /* gjenopprettet fra kunnskap/08_Creative_Library.md — mangler i 02_DESIGNSYSTEM.md.
+    Strek/flate på lys bakgrunn (logo-taklinje, logo-X), ALDRI løpende tekst — kontrastunntatt,
+    se DESIGN.md §3. Ikke samme rolle som --gull-dyp (som er kalibrert for TEKST på lyst). */
+  --color-gull-dyp: #856629; /* korrigert — se DESIGN.md §0, ikke #7A5E1C fra 02_DESIGNSYSTEM.md */
+  --color-feil: #B3261E; /* korrigert — se DESIGN.md §0, ikke #9B2C1F fra 02_DESIGNSYSTEM.md */
+  --color-ok: #1F5D3A;
+  --color-kant: rgba(23, 46, 87, 0.14);
+  --color-kant-sterk: rgba(23, 46, 87, 0.28);
+
+  /* 2. Typografi */
+  --font-display: 'Montserrat', system-ui, sans-serif;
+  --font-tekst: 'Inter', system-ui, sans-serif;
+
+  --text-hero: clamp(2.5rem, 1.4rem + 4.6vw, 4.5rem);
+  --text-h2: clamp(1.9rem, 1.3rem + 2.4vw, 3rem);
+  --text-h3: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+  --text-stor: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
+  --text-brod: 1.0625rem;
+  --text-liten: 0.9375rem;
+  --text-mikro: 0.8125rem;
+
+  /* 3. Rom — 8px-grid. Overstyrer ikke bar --spacing (Tailwinds numeriske skala) */
+  --spacing-rom-1: 0.5rem;
+  --spacing-rom-2: 1rem;
+  --spacing-rom-3: 1.5rem;
+  --spacing-rom-4: 2rem;
+  --spacing-rom-5: 3rem;
+  --spacing-rom-6: 4rem;
+  --spacing-rom-7: 6rem;
+  --spacing-rom-8: 8rem;
+  --spacing-seksjon-y: clamp(4rem, 2rem + 8vw, 8rem);
+  --spacing-bredde: 1200px;
+  --spacing-bredde-tekst: 68ch;
+  --spacing-side-x: clamp(1.25rem, 5vw, 4rem);
+
+  /* 4. Form og skygge — navngitt for å ikke kollidere med Tailwinds egen radius/shadow-skala */
+  --radius-knapp: 4px;
+  --radius-kort: 8px;
+  --shadow-skygge: 0 1px 2px rgba(23, 46, 87, .06), 0 8px 24px rgba(23, 46, 87, .08);
+
+  /* 5. Bevegelse — én easing i hele systemet */
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1); /* korrigert — se DESIGN.md §0, ikke 0.61-varianten */
+}
+
+/* Varigheter har ikke et eget Tailwind-namespace — vanlige CSS-variabler til
+   direkte bruk i transition/animation (f.eks. transition-duration: var(--tid-nor)) */
+:root {
+  --tid-rask: 160ms;
+  --tid-nor: 280ms;
+  --tid-treg: 520ms;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/montserrat-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/montserrat-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter-500.woff2') format('woff2');
+}
+
+@layer base {
+  body {
+    font-family: var(--font-tekst);
+    background-color: var(--color-bomull);
+    color: var(--color-marine);
+    line-height: 1.65;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+  }
+}
+
+/* Fokusring — aldri outline: none. Fase 5 (tilgjengelighet), 01_BYGGEPLAN.md */
+:focus-visible {
+  outline: 2px solid var(--color-gull-dyp);
+  outline-offset: 3px;
+}
+
+/* Reveal — fade + 16px opp når en seksjon kommer i view (02_DESIGNSYSTEM.md §5, punkt 1).
+   Grunntilstand: skjult/forskjøvet til JS (src/scripts/reveal.js) legger til .er-synlig
+   via IntersectionObserver, once:true. Uten JS gjelder ikke denne regelen i det hele tatt
+   siden klassen kun styrer overgangen — innholdet er likevel alltid i DOM og lesbart,
+   bare uten fade-inn-effekten. prefers-reduced-motion (rett under) overstyrer til synlig
+   uansett JS-tilstand. */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--tid-treg) var(--ease-brand), transform var(--tid-treg) var(--ease-brand);
+}
+.reveal.er-synlig {
+  opacity: 1;
+  transform: none;
+}
+
+/* Statisk fallback for all bevegelse. Ingen animerte komponenter finnes ennå (Fase 1),
+   men reglene ligger her slik at alt som bygges i Fase 2/3 arver dem. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* Merk om .hero__bg-animasjonen og .no-js .nav--over-låsing: begge håndteres
+   IKKE her, til tross for at de tematisk hører til reduced-motion/no-js.
+   Astro legger en data-astro-cid-*-attributtselektor til ETT HVERT
+   sammensatt selektorledd i et komponent-scopet <style>-block (verifisert
+   mot kompilert CSS), noe som gjør scopede regler i Nav.astro/index.astro
+   mer spesifikke enn tilsvarende globale regler her — en global regel her
+   ville tapt kaskadekrigen mot dem. De to overstyringene ligger derfor i
+   riktig fil: hero-zoom-nullstillingen i index.astro sin egen
+   @media(prefers-reduced-motion)-blokk, og no-js-låsingen i Nav.astro sitt
+   style-block via :global(.no-js) (som holder AKKURAT det leddet uscopet,
+   mens resten av selektoren fortsatt scopes riktig mot Nav-elementene). */

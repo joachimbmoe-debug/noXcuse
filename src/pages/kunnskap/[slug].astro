@@ -1,0 +1,73 @@
+---
+// `/kunnskap/[slug]` — artikkelmal, Fase 3 steg 14, 01_BYGGEPLAN.md linje 265.
+//
+// getStaticPaths leser fra kunnskap-collection (src/content/kunnskap/*.md, se
+// src/content.config.ts). Collection er TOM i denne runden — se
+// index.astro sin filkommentar og MANGLER.md — så dette returnerer en tom
+// liste og genererer null sider. Det er normal Astro-oppførsel, ikke en feil.
+// Malen står klar til artikler legges til som markdown-filer.
+import Side from '../../layouts/Side.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const artikler = await getCollection('kunnskap');
+  return artikler.map((artikkel) => ({
+    params: { slug: artikkel.id },
+    props: { artikkel },
+  }));
+}
+
+interface Props {
+  artikkel: Awaited<ReturnType<typeof getCollection<'kunnskap'>>>[number];
+}
+
+const { artikkel } = Astro.props as Props;
+const { Content } = await render(artikkel);
+---
+
+<Side title={`noXcuse — ${artikkel.data.tittel}`} description={artikkel.data.ingress}>
+  <article class="artikkel reveal" data-reveal>
+    <div class="artikkel__inner">
+      <a class="artikkel__tilbake" href="/kunnskap/">Tilbake til Kunnskap</a>
+      <h1 class="artikkel__h1">{artikkel.data.tittel}</h1>
+      <div class="artikkel__innhold">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Side>
+
+<style>
+  .artikkel {
+    background-color: var(--color-bomull);
+  }
+  .artikkel__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-7) var(--spacing-side-x) var(--spacing-seksjon-y);
+  }
+  .artikkel__tilbake {
+    display: inline-block;
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    margin-bottom: var(--spacing-rom-3);
+  }
+  .artikkel__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+  .artikkel__innhold {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    line-height: 1.65;
+  }
+  .artikkel__innhold :global(h2) {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: var(--spacing-rom-4) 0 var(--spacing-rom-2);
+  }
+  .artikkel__innhold :global(p) {
+    margin: 0 0 var(--spacing-rom-2);
+  }
+</style>

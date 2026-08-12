@@ -1,0 +1,134 @@
+---
+// `/kunnskap` — Fase 3 steg 14, 01_BYGGEPLAN.md linje 265. Én mal, artikler som
+// markdown i src/content/kunnskap/ (se src/content.config.ts).
+//
+// H1 og ingress er kopiert ordrett fra 04_TEKST_ALLE_SIDER.md §12.
+//
+// Collection er TOM i denne runden — se 04_TEKST_ALLE_SIDER.md linje 564: "Før
+// disse skrives: avklar søkeordgrensen mot husvik.no." Dette er en uavklart
+// forretningsbeslutning (Erik/Husvik), ikke et faktum som kan plassholdes, så
+// ingen av de åtte planlagte artiklene er skrevet. Se MANGLER.md.
+//
+// Tom-tilstand følger samme mønster som config.TJENESTELISTE_KLAR-venteteksten
+// i vi-tar-resten.astro/egen-entreprenor.astro/mulighetsvurdering.astro: ærlig
+// forklaring i stedet for en tom seksjon.
+import Side from '../../layouts/Side.astro';
+import { getCollection } from 'astro:content';
+
+const artikler = (await getCollection('kunnskap')).sort((a, b) =>
+  a.data.tittel.localeCompare(b.data.tittel, 'nb')
+);
+---
+
+<Side
+  title="noXcuse — Kunnskap"
+  description="Det vi vet om småhus, tomter og hva ting koster. Skrevet for å være til nytte, også hvis du ender opp med å kjøpe av noen andre."
+>
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Kunnskap</h1>
+      <p class="hero__ingress">
+        Det vi vet om småhus, tomter og hva ting koster. Skrevet for å være til nytte, også hvis
+        du ender opp med å kjøpe av noen andre.
+      </p>
+    </div>
+  </section>
+
+  <section class="artikler reveal" data-reveal aria-label="Artikler">
+    <div class="artikler__inner">
+      {artikler.length === 0 ? (
+        <div class="artikler__venter">
+          <p><strong>Ingen artikler er publisert ennå.</strong></p>
+          <p>
+            Vi bygger denne seksjonen fortløpende. Kommer du hit uten å finne noe, si fra til oss
+            — så svarer vi direkte i mellomtiden.
+          </p>
+        </div>
+      ) : (
+        <ul class="artikler__liste">
+          {artikler.map((artikkel) => (
+            <li class="artikkelkort">
+              <a class="artikkelkort__lenke" href={`/kunnskap/${artikkel.id}/`}>
+                <h2 class="artikkelkort__h2">{artikkel.data.tittel}</h2>
+                <p class="artikkelkort__ingress">{artikkel.data.ingress}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+</Side>
+
+<style>
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-7) var(--spacing-side-x) var(--spacing-rom-5);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 20ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .artikler {
+    background-color: var(--color-lin);
+  }
+  .artikler__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .artikler__venter p {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .artikler__venter p:last-child {
+    margin-bottom: 0;
+  }
+
+  .artikler__liste {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-3);
+  }
+  .artikkelkort__lenke {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background-color: var(--color-bomull);
+    border: 1px solid var(--color-kant);
+    border-radius: var(--radius-kort);
+    padding: var(--spacing-rom-3);
+    transition: border-color var(--tid-nor) var(--ease-brand);
+  }
+  .artikkelkort__lenke:hover,
+  .artikkelkort__lenke:focus-visible {
+    border-color: var(--color-gull-sterk);
+  }
+  .artikkelkort__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+  .artikkelkort__ingress {
+    font-size: var(--text-brod);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+</style>

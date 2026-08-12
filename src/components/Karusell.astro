@@ -1,0 +1,171 @@
+---
+// Karusell — bilder fra fabrikken. Lagt til på Joachims instruks («har lagt til noen
+// bilder som kan gå i karusell på forsiden»).
+//
+// Bare tre bilder er godkjent til bruk. Seks lå i nettside-3-roten; tre ble luket ut
+// ved gjennomgang (se .foreman/ledger.md, Kjøring 3):
+// - IMG_1657–1660.jpeg: skjermbilder av et Husvik-tegningsdokument (Module_V8-1.pdf)
+//   med eksplisitt copyright-forbehold trykt på selve dokumentet. Aldri bruk.
+// - v8-1 visualisjon.png / hf_20260802_...png: sparkle-vannmerke, sannsynlig
+//   KI-generert. Joachim har tidligere eksplisitt avvist v8-1 («ikke bruk den»).
+// Bekreftet med Joachim: kun de tre ekte fabrikkfotoene brukes.
+//
+// Ingen bildetekst her er hentet fra 04_TEKST_ALLE_SIDER.md — den fila har ingen
+// seksjon for dette (karusellen fantes ikke i spesifikasjonen). Holdt bevisst kort
+// og faktuelt, ingen påstander utover det bildet selv viser. Flagg til Erik om han
+// vil ha mer spesifikk bildetekst.
+//
+// Grunnfunksjon uten JS: CSS scroll-snap, vanlig horisontal scroll — alt innhold
+// synlig og navigerbart uten JavaScript. Piltastene er ren progressiv forbedring.
+import { ChevronLeft, ChevronRight } from 'lucide-astro';
+
+interface Bilde {
+  src: string;
+  alt: string;
+}
+
+const bilder: Bilde[] = [
+  { src: '/bilder/fabrikk-2.webp', alt: 'Hus under bygging på fabrikken, sett utenfra — trekledning og vindu montert' },
+  { src: '/bilder/fabrikk-1.webp', alt: 'Hus under bygging inne i produksjonshallen, sett fra siden' },
+  { src: '/bilder/fabrikk-3.webp', alt: 'Nærbilde av et hus under bygging på fabrikken' },
+];
+---
+
+<section class="karusell" aria-labelledby="karusell-h2">
+  <div class="karusell__inner">
+    <h2 id="karusell-h2" class="karusell__h2">Fra fabrikken</h2>
+    <p class="karusell__ingress">
+      Husene bygges hos Husvik 3D i Riga, Latvia — under tak, kontrollert, hele veien.
+      Bildene er fra produksjon, ikke ferdige leveranser.
+    </p>
+
+    <div class="karusell__viewport">
+      <ul class="karusell__strip" role="list">
+        {bilder.map((b) => (
+          <li class="karusell__slide">
+            <img src={b.src} alt={b.alt} loading="lazy" decoding="async" width="1280" height="960" />
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="karusell__kontroller" data-js-only>
+      <button type="button" class="karusell__knapp" data-retning="-1" aria-label="Forrige bilde">
+        <ChevronLeft size={20} aria-hidden="true" />
+      </button>
+      <button type="button" class="karusell__knapp" data-retning="1" aria-label="Neste bilde">
+        <ChevronRight size={20} aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .karusell {
+    background-color: var(--color-bomull);
+    padding-block: var(--spacing-seksjon-y);
+  }
+
+  .karusell__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding-inline: var(--spacing-side-x);
+  }
+
+  .karusell__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+
+  .karusell__ingress {
+    max-width: var(--spacing-bredde-tekst);
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+
+  /* Grunnfunksjon: vanlig scroll-snap-stripe. Fungerer uten JS — brukeren drar/sveiper. */
+  .karusell__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-kort);
+  }
+
+  .karusell__strip {
+    display: flex;
+    gap: var(--spacing-rom-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .karusell__slide {
+    flex: 0 0 min(85%, 640px);
+    scroll-snap-align: start;
+  }
+
+  .karusell__slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-kort);
+    background-color: var(--color-lin);
+  }
+
+  /* Piltaster — ren progressiv forbedring, skjult til JS bekrefter støtte */
+  .karusell__kontroller {
+    display: none;
+    gap: var(--spacing-rom-2);
+    margin-top: var(--spacing-rom-3);
+  }
+  .karusell__kontroller.er-aktiv {
+    display: flex;
+  }
+
+  .karusell__knapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-knapp);
+    border: 1px solid var(--color-kant-sterk);
+    background-color: var(--color-bomull);
+    color: var(--color-marine);
+    cursor: pointer;
+    transition: background-color var(--tid-nor) var(--ease-brand);
+  }
+  .karusell__knapp:hover {
+    background-color: var(--color-lin);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .karusell__viewport {
+      scroll-behavior: auto;
+    }
+  }
+</style>
+
+<script>
+  // Viser piltastene kun når JS faktisk kjører, og lar dem scrolle stripa ett
+  // "slide" av gangen. Uten JS er stripa fortsatt fullt navigerbar med sveip/scroll.
+  document.querySelectorAll<HTMLElement>('.karusell__kontroller').forEach((kontroller) => {
+    kontroller.classList.add('er-aktiv');
+    const viewport = kontroller
+      .closest('.karusell__inner')
+      ?.querySelector<HTMLElement>('.karusell__viewport');
+    if (!viewport) return;
+
+    kontroller.querySelectorAll<HTMLButtonElement>('.karusell__knapp').forEach((knapp) => {
+      knapp.addEventListener('click', () => {
+        const retning = Number(knapp.dataset.retning ?? '1');
+        const slide = viewport.querySelector<HTMLElement>('.karusell__slide');
+        const bredde = slide?.getBoundingClientRect().width ?? viewport.clientWidth;
+        viewport.scrollBy({ left: retning * (bredde + 24), behavior: 'smooth' });
+      });
+    });
+  });
+</script>

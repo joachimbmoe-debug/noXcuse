@@ -1,0 +1,451 @@
+---
+// Forsiden `/` — ekte innhold. Fase 3 steg 7, 01_BYGGEPLAN.md — kundens andre
+// eksplisitte sjekkpunkt ("forsiden med segmentvelgeren").
+//
+// All tekst kopiert ordrett fra 04_TEKST_ALLE_SIDER.md §1 (§1.1–§1.11).
+// Rekkefølgen under følger §1.1–§1.10 i kildefila. §1.11 (footer) rendres allerede
+// av Side.astro → Base.astro og gjentas ikke her.
+//
+// Kritisk plassering (kundens hardeste krav, se §1.1b og §1.3-kommentaren i kilden):
+// Segmentvelger rett under hero/Tillitsstripe, Kostnadstrapp rett under Segmentvelger.
+//
+// Seksjoner uten egen komponent (Problemet, Kvalitet, Hvem vi er, Sluttseksjon) er
+// enkeltbruk — bygget inline her i stedet for som gjenbrukbare komponenter, jf.
+// ticket-instruksen "single-use content, no dedicated component".
+// Base.astro brukes direkte i stedet for Side.astro her (kun forsiden), fordi
+// fotoheroen trenger Base sin floatOverHero-prop (videreført til Nav.astro).
+// Side.astro er en tynn innpakning som kun videresender title/description —
+// den er bevisst urørt (utenfor WRITE SET for denne endringen), så forsiden
+// hopper forbi den og kaller Base direkte. Ingen funksjonell forskjell for
+// resten av siden, kun hvordan denne ene siden kobler seg til layoutet.
+import Base from '../layouts/Base.astro';
+import Knapp from '../components/Knapp.astro';
+import Tillitsstripe from '../components/Tillitsstripe.astro';
+import Segmentvelger from '../components/Segmentvelger.astro';
+import Kostnadstrapp from '../components/Kostnadstrapp.astro';
+import OrdnerSelv from '../components/OrdnerSelv.astro';
+import ModellKort from '../components/ModellKort.astro';
+import Prosess from '../components/Prosess.astro';
+import LeadBaand from '../components/LeadBaand.astro';
+
+// Fotohero — tre eksisterende, rettighetsklarerte fabrikkfoto (samme tre som
+// Karusell.astro brukte). Portert Husvik-mekanikk, se hero-slideshow.js og
+// Nav.astro sin floatOverHero-prop. Lagt til 2026-08-12 på Joachims eksplisitte
+// instruks ("samme type hero som på Husvik ... menyen gjennomsiktig oppå").
+const heroBilder = [
+  { src: '/bilder/fabrikk-2.webp', alt: 'Hus under bygging på fabrikken, sett utenfra — trekledning og vindu montert' },
+  { src: '/bilder/fabrikk-1.webp', alt: 'Hus under bygging inne i produksjonshallen, sett fra siden' },
+  { src: '/bilder/fabrikk-3.webp', alt: 'Nærbilde av et hus under bygging på fabrikken' },
+];
+
+// §1.6 Kvalitet — MANGLER.md #12: veggtykkelse/U-verdier/energimerke finnes ikke.
+// Kildeteksten (§1.6) er allerede skrevet uten disse tallene ("tykkere vegger og tak
+// enn minstekravet" — ingen mm, ingen U-verdi) — kopiert ordrett under, ingen tall lagt til.
+---
+
+<Base
+  title="noXcuse — egen bolig til en pris du forstår"
+  description="Komplette småhus og hytter inntil 49 m², produsert av Husvik og levert som avtalt. Du får vite hva prisen dekker — og hva du må ordne selv — før du bestemmer deg."
+  floatOverHero
+>
+  {/* §1.1 Hero — nå fullbredde fotohero (Husvik-mekanikk portert, se
+      hero-slideshow.js). H1/ingress/CTA-tekst uendret fra 04_TEKST_ALLE_SIDER.md §1.1. */}
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__bg" data-hero-fade>
+      {heroBilder.map((b, n) => (
+        <img
+          src={b.src}
+          alt={b.alt}
+          class={n === 0 ? 'active' : undefined}
+          width="1600"
+          height="1200"
+          fetchpriority={n === 0 ? 'high' : undefined}
+          loading={n === 0 ? undefined : 'lazy'}
+          decoding="async"
+        />
+      ))}
+    </div>
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Egen bolig til en pris du forstår</h1>
+      <p class="hero__ingress">
+        Komplette småhus og hytter inntil 49 m², produsert i Husviks fabrikk og levert ferdig på
+        trailer til tomta di. Du får vite hva prisen dekker — og hva du må ordne selv — før du
+        bestemmer deg.
+      </p>
+      <div class="hero__cta">
+        <Knapp variant="primaer" href="/befaring">Book befaring</Knapp>
+        <Knapp variant="sekundaer" href="/modeller">Se modellene</Knapp>
+      </div>
+    </div>
+  </section>
+
+  <Tillitsstripe />
+
+  {/* §1.1b Segmentvelgeren — rett under hero/tillitsstripe, over kostnadstrappen. */}
+  <Segmentvelger />
+
+  {/* §1.2 Problemet */}
+  <section class="problemet reveal" data-reveal aria-labelledby="problemet-h2">
+    <div class="problemet__inner">
+      <h2 id="problemet-h2" class="problemet__h2">Ingen svarer på det du faktisk spurte om</h2>
+      <p class="problemet__tekst">
+        Du spør hva et hus koster. Du får «fra 795 000» og «nøkkelferdig». Så oppdager du
+        fundamentet. Så vann og avløp. Så strømtilkoblingen. Så gebyrene. Og prisen du regnet
+        med, er ikke prisen du betaler.
+      </p>
+      <p class="problemet__tekst">
+        Vi gjør det motsatt. Hver pris hos oss står med et leveransenivå, så du vet nøyaktig hva
+        som er med og hva som ikke er det. Det du må ordne selv, sier vi i klartekst — ikke i
+        liten skrift.
+      </p>
+    </div>
+  </section>
+
+  {/* §1.3 Kostnadstrappen — rett under Segmentvelgeren (kundens hardeste krav). */}
+  <Kostnadstrapp />
+
+  {/* §1.4 Dette ordner du selv */}
+  <OrdnerSelv />
+
+  {/* §1.5 Modellene */}
+  <section class="modellene reveal" data-reveal aria-labelledby="modellene-h2">
+    <div class="modellene__inner">
+      <h2 id="modellene-h2" class="modellene__h2">Modellene</h2>
+      <p class="modellene__ingress">
+        Komplette boenheter inntil 49 m². Bygget ferdig innendørs i fabrikk, transportert på
+        trailer og satt ned på tomta di.
+      </p>
+
+      <div class="modellene__grid">
+        <ModellKort navn={null} kvadratmeter={null} bildeAlt="Plassholder — modellbilde fra Husvik er ikke levert ennå" />
+        <ModellKort navn={null} kvadratmeter={null} bildeAlt="Plassholder — modellbilde fra Husvik er ikke levert ennå" />
+        <ModellKort navn={null} kvadratmeter={null} bildeAlt="Plassholder — modellbilde fra Husvik er ikke levert ennå" />
+      </div>
+
+      <Knapp variant="sekundaer" href="/modeller">Se alle modeller</Knapp>
+    </div>
+  </section>
+
+  {/* §1.6 Kvalitet */}
+  <section class="kvalitet reveal" data-reveal aria-labelledby="kvalitet-h2">
+    <div class="kvalitet__inner">
+      <h2 id="kvalitet-h2" class="kvalitet__h2">Ordinær bolig. Ikke modulbygg, ikke brakke.</h2>
+      <p class="kvalitet__tekst">
+        Huset bygges etter TEK17, akkurat som et hus reist på tomta. Forskjellen er at det
+        bygges innendørs, under kontrollerte forhold, av folk som gjør det samme hver uke.
+      </p>
+
+      <ul class="kvalitet__punkter">
+        <li><strong>SINTEF Teknisk Godkjenning</strong> på produktet, med årlige inspeksjoner av fabrikken.</li>
+        <li><strong>Sentral godkjenning</strong> i Norge.</li>
+        <li>
+          <strong>Lavenergi-byggemåte</strong> med tykkere vegger og tak enn minstekravet, som gir
+          dokumentert lavt energiforbruk.
+        </li>
+      </ul>
+
+      <p class="kvalitet__tekst">
+        Produksjonen skjer i Husviks fabrikk i Riga i Latvia. Det sier vi rett ut. Fabrikken
+        inspiseres årlig, og det er en større kvalitetssikring enn de fleste norske
+        byggeplasser har.
+      </p>
+
+      <Knapp variant="sekundaer" href="/kvalitet">Les om kvalitet og dokumentasjon</Knapp>
+    </div>
+  </section>
+
+  {/* §1.7 Slik gjør vi det */}
+  <Prosess />
+
+  {/* §1.8 Kostnadsguiden (lead magnet-bånd) */}
+  <LeadBaand />
+
+  {/* §1.9 Hvem vi er */}
+  <section class="hvem-vi-er reveal" data-reveal aria-labelledby="hvem-vi-er-h2">
+    <div class="hvem-vi-er__inner">
+      <h2 id="hvem-vi-er-h2" class="hvem-vi-er__h2">Navnet er løftet</h2>
+      <p class="hvem-vi-er__tekst">
+        No Xcuse betyr at vi ikke har noen unnskyldning for ikke å levere det vi har avtalt.
+        Prisen skal stå seg. Kvaliteten skal kunne dokumenteres. Du skal få svar.
+      </p>
+      <p class="hvem-vi-er__tekst">
+        Hører du en bortforklaring fra oss, har vi brutt hovedløftet vårt. Da vil vi vite om det.
+      </p>
+      <Knapp variant="sekundaer" href="/om-oss">Om oss</Knapp>
+    </div>
+  </section>
+
+  {/* §1.10 Sluttseksjon */}
+  <section class="sluttseksjon reveal" data-reveal aria-labelledby="sluttseksjon-h2">
+    <div class="sluttseksjon__inner">
+      <h2 id="sluttseksjon-h2" class="sluttseksjon__h2">Skal vi se på tomta di?</h2>
+      <p class="sluttseksjon__tekst">
+        Den vanligste grunnen til at folk ikke kommer videre, er at de ikke vet om det går an å
+        bygge der de vil bygge. Det finner vi ut sammen.
+      </p>
+      <div class="sluttseksjon__cta">
+        <Knapp variant="primaer" href="/kan-du-bygge-her">Kan du bygge her? Få en gratis førstevurdering</Knapp>
+        <Knapp variant="sekundaer" href="/befaring">Book befaring</Knapp>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* §1.1 Hero — fullbredde fotohero (Husvik-mekanikk portert, se ticket
+     2026-08-12 "samme type hero som på Husvik ... menyen gjennomsiktig oppå").
+     min-height:100svh + position:relative gir plass til .hero__bg-laget under;
+     Nav.astro sin floatOverHero-prop legger menyen absolutt/gjennomsiktig oppå. */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    /* Marine fallback-bunn bak bildelaget mens første foto laster. */
+    background-color: var(--color-marine);
+    overflow: hidden;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .hero__bg img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.6s ease;
+    transform: scale(1);
+  }
+  .hero__bg img.active {
+    opacity: 1;
+    animation: hero-zoom 7s ease-out forwards;
+  }
+  @keyframes hero-zoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.06); }
+  }
+  /* Nuller eksplisitt ut zoom-animasjonen slik at det aktive bildet blir
+     stående i skala 1 (ikke bare "veldig raskt" til 1.06 — global.css sin
+     reduced-motion-blokk strupper kun varigheten, ikke sluttilstanden). Ligger
+     her, ikke i global.css sin blokk (se global.css sin egen forklaring):
+     Astro sin komponent-scoping gjør en global regel for denne selektoren
+     mindre spesifikk enn regelen over, så den ville tapt kaskadekrigen.
+     Samme prinsipp som Husviks tilsvarende regel (Kunder/Husvik/Nettside/css/
+     style.css). hero-slideshow.js respekterer samme mediespørring og bytter
+     aldri aktivt bilde i utgangspunktet. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__bg img.active { animation: none; }
+  }
+  /* Vertikal gradient for lesbarhet — noXcuse sin marine i stedet for Husviks
+     grønne --head, samme fireleddsmønster (mørk øverst/nederst, lysere midtparti). */
+  .hero__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-marine) 55%, transparent) 0%,
+      color-mix(in srgb, var(--color-marine) 12%, transparent) 30%,
+      color-mix(in srgb, var(--color-marine) 42%, transparent) 60%,
+      color-mix(in srgb, var(--color-marine) 92%, transparent) 100%
+    );
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-7) var(--spacing-side-x) var(--spacing-rom-6);
+  }
+  .hero__h1 {
+    font-size: var(--text-hero);
+    color: var(--color-bomull);
+    max-width: 20ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: color-mix(in srgb, var(--color-bomull) 85%, transparent);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-rom-2);
+  }
+
+  /* CTA-kontrast mot fotohero (ticket punkt 5). Knapp.astro sin
+     variant="sekundaer" er marine tekst/kant på transparent bunn — ulesbar
+     oppå et mørkt foto. Scopet override, ikke en global endring i Knapp.astro
+     (WRITE SET). Portert fra Husviks .hero .btn-ghost/.hero .btn-solid. */
+  .hero .knapp--sekundaer {
+    color: var(--color-bomull);
+    border-color: color-mix(in srgb, var(--color-bomull) 50%, transparent);
+  }
+  .hero .knapp--sekundaer:hover {
+    border-color: var(--color-bomull);
+    background-color: color-mix(in srgb, var(--color-bomull) 12%, transparent);
+  }
+  /* Primær (marine bunn, lys tekst) leser allerede godt mot foto — kun en
+     tynn lys kant lagt til for å skille knappen fra et mørkt bildeparti. */
+  .hero .knapp--primaer {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-bomull) 28%, transparent);
+  }
+
+  /* §1.2 Problemet — lin, mellom Segmentvelger (bomull) og Kostnadstrapp (bomull). */
+  .problemet {
+    background-color: var(--color-lin);
+  }
+  .problemet__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .problemet__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .problemet__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .problemet__tekst:last-child {
+    margin-bottom: 0;
+  }
+
+  /* §1.5 Modellene — bomull, differ fra OrdnerSelv (lin) rett over. */
+  .modellene {
+    background-color: var(--color-bomull);
+  }
+  .modellene__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .modellene__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .modellene__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-5);
+  }
+  .modellene__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-3);
+    margin-bottom: var(--spacing-rom-4);
+  }
+  @media (min-width: 640px) {
+    .modellene__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .modellene__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* §1.6 Kvalitet — lin, differ fra Modellene (bomull) og Prosess (bomull). */
+  .kvalitet {
+    background-color: var(--color-lin);
+  }
+  .kvalitet__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .kvalitet__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .kvalitet__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .kvalitet__punkter {
+    list-style: none;
+    margin: 0 0 var(--spacing-rom-3);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-2);
+    max-width: var(--spacing-bredde-tekst);
+  }
+  .kvalitet__punkter li {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    padding-left: var(--spacing-rom-2);
+    border-left: 2px solid var(--color-gull-sterk);
+  }
+
+  /* §1.9 Hvem vi er — bomull, differ fra LeadBaand (marine) og Sluttseksjon (lin). */
+  .hvem-vi-er {
+    background-color: var(--color-bomull);
+  }
+  .hvem-vi-er__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .hvem-vi-er__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hvem-vi-er__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .hvem-vi-er__tekst:last-of-type {
+    margin-bottom: var(--spacing-rom-3);
+  }
+
+  /* §1.10 Sluttseksjon — lin, siste seksjon før footer (marine). */
+  .sluttseksjon {
+    background-color: var(--color-lin);
+  }
+  .sluttseksjon__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+    text-align: center;
+  }
+  .sluttseksjon__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .sluttseksjon__tekst {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+  .sluttseksjon__cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-rom-2);
+  }
+</style>

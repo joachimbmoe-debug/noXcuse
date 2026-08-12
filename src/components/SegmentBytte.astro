@@ -1,0 +1,89 @@
+---
+// SegmentBytte — "passer ikke dette likevel?"-bytteren nederst på hver segmentside.
+// Kilde: 08_SEGMENTSIDER_TEKST.md §6 ("Ruting og bytte av spor"). Heading kopiert
+// ordrett. Lenketekstene ("Tomta er klar · Vi tar resten · Egen entreprenør ·
+// Vil bare vite mer") er også kopiert ordrett fra §6 — de er kortere enn
+// segmenter.ts sin kortTittel (som er hele kortsetningen fra §1, ment for
+// segmentvelger-kortene på forsiden, ikke denne kompakte bytteren), så de
+// holdes som en egen lokal korttekst-tabell her i stedet for å legge et nytt
+// felt i segmenter.ts (som denne ticketen ikke skal røre).
+//
+// Leser segmenter.ts for rekkefølge/slugs (én sannhet for sporlisten) —
+// dupliserer ikke selve segmentlisten.
+//
+// Viser KUN de tre andre sporene, ikke et selvlenke tilbake til gjeldende side
+// (ticket-instruks — avviker bevisst fra §6 sitt "fire lenker", som gjelder
+// kostnadsguiden (spor 4, ingen hovednav) sin egen visning, ikke disse tre
+// navigerte segmentsidene). Ekte <a>-lenker — fungerer uten JS, se §6
+// "Teknisk"-notatet.
+import { segmenter } from '../data/segmenter';
+
+interface Props {
+  gjeldende: 'tomta-er-klar' | 'vi-tar-resten' | 'egen-entreprenor';
+}
+const { gjeldende } = Astro.props as Props;
+
+const korteLenketekster: Record<string, string> = {
+  'tomta-er-klar': 'Tomta er klar',
+  'vi-tar-resten': 'Vi tar resten',
+  'egen-entreprenor': 'Egen entreprenør',
+  kostnadsguiden: 'Vil bare vite mer',
+};
+
+const andreSpor = segmenter.filter((s) => s.slug !== gjeldende);
+---
+
+<section class="segmentbytte" aria-labelledby="segmentbytte-h2">
+  <div class="segmentbytte__inner">
+    <h2 id="segmentbytte-h2" class="segmentbytte__h2">Passer ikke dette likevel?</h2>
+    <p class="segmentbytte__lenker">
+      {'→ '}
+      {andreSpor.map((s, i) => (
+        <>
+          <a href={`/${s.slug}`}>{korteLenketekster[s.slug]}</a>
+          {i < andreSpor.length - 1 && <span aria-hidden="true"> · </span>}
+        </>
+      ))}
+    </p>
+  </div>
+</section>
+
+<style>
+  .segmentbytte {
+    background-color: var(--color-lin);
+    border-top: 1px solid var(--color-kant);
+  }
+
+  .segmentbytte__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-4) var(--spacing-side-x);
+  }
+
+  .segmentbytte__h2 {
+    font-size: var(--text-liten);
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+
+  .segmentbytte__lenker {
+    margin: 0;
+    font-size: var(--text-brod);
+  }
+
+  .segmentbytte__lenker a {
+    color: var(--color-gull-dyp);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .segmentbytte__lenker a:hover {
+    color: var(--color-marine);
+  }
+
+  .segmentbytte__lenker span {
+    color: var(--color-marine-80);
+  }
+</style>

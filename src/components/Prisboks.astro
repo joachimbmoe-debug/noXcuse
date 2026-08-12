@@ -1,0 +1,176 @@
+---
+// Prisboks — den viktigste komponenten på hele siden. Se 02_DESIGNSYSTEM.md §6 og
+// 01_BYGGEPLAN.md fase 2 "Hard regel — Prisboks.astro" og fase 3 steg 3.
+//
+// Rendres ALDRI uten leveransenivå. Kaster feil i bygget hvis nivaa mangler — bevisst,
+// se kommentar ved throw under. Bedre at bygget stopper enn at en pris uten nivå går live.
+//
+// pris.nivaa forventes å være ETIKETTEN som vises (f.eks. "Levert og montert" —
+// leveransenivaa.navn i src/data/leveransenivaa.ts), ikke den maskinlesbare id-en
+// ('levert-montert'). Diagrammet i 02_DESIGNSYSTEM.md §6 viser etiketten som
+// "LEVERT OG MONTERT" — komponenten versaliserer selv via CSS, så kall den med
+// den lesbare formen. Flagget i leveransen som en avgjørelse — se rapport.
+//
+// belopInkMva er ALLTID inkl. mva — se 09_TJENESTEMENY.md §2. Aldri en egen
+// "eks. mva"-linje eller -kolonne, uansett fremtidig B2B-behov.
+//
+// Mangler belopInkMva: fallback-teksten er kopiert ordrett fra
+// 04_TEKST_ALLE_SIDER.md §3 "Fast tekst når pris mangler" (den delen av filen som
+// faktisk inneholder denne teksten — §1.3 dekker kostnadstrappen, ikke prislapp-fallback).
+
+import { Check, Minus } from 'lucide-astro';
+import Knapp from './Knapp.astro';
+
+export interface PrisboksPris {
+  nivaa: string;
+  belopInkMva: number | null;
+  inkludert: string[];
+  ikkeInkludert: string[];
+}
+
+interface Props {
+  pris: PrisboksPris;
+}
+
+const { pris } = Astro.props;
+
+if (!pris?.nivaa) {
+  throw new Error('Prisboks uten leveransenivå. Dette er et merkevarebrudd — fiks dataene.');
+}
+
+const belopFormatert =
+  pris.belopInkMva !== null ? new Intl.NumberFormat('nb-NO').format(pris.belopInkMva) : null;
+---
+
+<div class="prisboks">
+  <p class="prisboks__etikett">{pris.nivaa}</p>
+
+  {
+    belopFormatert !== null ? (
+      <p class="prisboks__belop">{belopFormatert} kr inkl. mva</p>
+    ) : (
+      <div class="prisboks__ikke-publisert">
+        <p>
+          Prisen på denne modellen er ikke publisert ennå. Vi publiserer den når den er endelig,
+          og aldri som «fra»-pris.
+        </p>
+        <Knapp variant="sekundaer" href="/hva-koster-det">
+          Gi beskjed når prisen er klar
+        </Knapp>
+      </div>
+    )
+  }
+
+  {
+    pris.inkludert.length > 0 && (
+      <div class="prisboks__liste">
+        <p class="prisboks__liste-tittel">Dette er med:</p>
+        <ul>
+          {pris.inkludert.map((punkt) => (
+            <li>
+              <Check size={16} strokeWidth={1.5} aria-hidden="true" />
+              <span>{punkt}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  {
+    pris.ikkeInkludert.length > 0 && (
+      <div class="prisboks__liste">
+        <p class="prisboks__liste-tittel">Dette ordner du selv:</p>
+        <ul>
+          {pris.ikkeInkludert.map((punkt) => (
+            <li>
+              <Minus size={16} strokeWidth={1.5} aria-hidden="true" />
+              <span>{punkt}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  /* Lys kort-flate (Bomull) — global fokusring (--color-gull-dyp, 5,74:1) er ikke
+     overstyrt her. Se DESIGN.md §6: overstyring trengs kun på marine/mørke flater. */
+  .prisboks {
+    background-color: var(--color-bomull);
+    border: 1px solid var(--color-kant);
+    border-radius: var(--radius-kort);
+    padding: var(--spacing-rom-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-3);
+  }
+
+  .prisboks__etikett {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-mikro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gull-dyp);
+  }
+
+  .prisboks__belop {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-h3);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-marine);
+  }
+
+  .prisboks__ikke-publisert {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-rom-2);
+  }
+
+  .prisboks__ikke-publisert p {
+    margin: 0;
+    color: var(--color-marine-80);
+  }
+
+  .prisboks__liste {
+    border-top: 1px solid var(--color-kant);
+    padding-top: var(--spacing-rom-3);
+  }
+
+  .prisboks__liste-tittel {
+    margin: 0 0 var(--spacing-rom-1);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+  }
+
+  .prisboks__liste ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+
+  .prisboks__liste li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-rom-1);
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+  }
+
+  .prisboks__liste li :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.2em;
+    color: var(--color-marine-80);
+  }
+</style>

@@ -1,0 +1,244 @@
+---
+// `/befaring` — felles befaringsskjema for alle spor. Fase 3 steg 13.
+// All tekst kopiert ordrett fra 04_TEKST_ALLE_SIDER.md §8. Skjemafelt fra
+// 03_SALGSFUNNEL.md §9 "Befaring (felles for alle spor)": Navn · Telefon ·
+// E-post · Sted · Ønsket tidspunkt · Samtykke.
+//
+// Ikke bundet til ett segment (nås fra alle fire spor og fra Nav sin
+// "Book befaring"-knapp) — hidden segment-felt utelates, se ticket-mønsteret
+// "<1|2|3|4-or-omit-if-not-segment-tied>".
+//
+// "Skriftlig oppsummering etterpå" er ⚠️ BEKREFT i kilden ("at dette faktisk
+// gjøres før det loves") og svartiden er ⚠️ BEKREFT ("ikke lov 'innen 24
+// timer' uten at dere faktisk holder det") — begge rutes gjennom
+// faktaEllerPlassholder(), samme mønster som /tomta-er-klar sin svartid.
+import Side from '../layouts/Side.astro';
+import { faktaEllerPlassholder } from '../lib/bekreft';
+
+const skriftligOppsummering = faktaEllerPlassholder(
+  null,
+  'Bekreftelse: skriftlig oppsummering sendes faktisk etter befaring'
+);
+const svartid = faktaEllerPlassholder(null, 'Svartid, /befaring — ikke love «innen 24 timer» uten bekreftelse');
+---
+
+<Side
+  title="noXcuse — Book befaring"
+  description="Vi møter deg der huset skal stå, eller der du vurderer å bygge. Du får svar på det du spør om."
+>
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Book befaring</h1>
+      <p class="hero__ingress">
+        Vi møter deg der huset skal stå, eller der du vurderer å bygge. Du får svar på det du
+        spør om, og du får ingen avtale du ikke har bedt om.
+      </p>
+    </div>
+  </section>
+
+  {/* Hva du får */}
+  <section class="hva-far reveal" data-reveal aria-labelledby="hva-far-h2">
+    <div class="hva-far__inner">
+      <h2 id="hva-far-h2" class="hva-far__h2">Hva du får</h2>
+      <ul class="hva-far__liste">
+        <li>Gjennomgang av hva som kan bygges på tomta</li>
+        <li>Modellene som passer, med pris og leveransenivå</li>
+        <li>Oversikt over hva du må ordne selv, og omtrent i hvilken rekkefølge</li>
+        <li>{skriftligOppsummering}</li>
+      </ul>
+    </div>
+  </section>
+
+  {/* Skjema — felt fra 03_SALGSFUNNEL.md §9 */}
+  <section class="skjema reveal" data-reveal aria-labelledby="skjema-h2">
+    <div class="skjema__inner">
+      <h2 id="skjema-h2" class="skjema__h2">Book befaring</h2>
+
+      <form
+        class="skjema__form"
+        name="befaring"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="firmanavn"
+        action="/takk"
+      >
+        <input type="hidden" name="form-name" value="befaring" />
+
+        <div class="skjema__honeypot" aria-hidden="true">
+          <label for="firmanavn-bef">La stå tomt</label>
+          <input type="text" id="firmanavn-bef" name="firmanavn" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="navn-bef">Navn</label>
+          <input type="text" id="navn-bef" name="navn" autocomplete="name" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="telefon-bef">Telefon</label>
+          <input type="tel" id="telefon-bef" name="telefon" autocomplete="tel" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="epost-bef">E-post</label>
+          <input type="email" id="epost-bef" name="epost" autocomplete="email" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="sted-bef">Sted</label>
+          <input type="text" id="sted-bef" name="sted" required />
+        </div>
+
+        <div class="skjema__felt">
+          <label for="tidspunkt-bef">Ønsket tidspunkt</label>
+          <input type="text" id="tidspunkt-bef" name="onsket-tidspunkt" required />
+        </div>
+
+        <div class="skjema__samtykke">
+          <input type="checkbox" id="samtykke-bef" name="samtykke" required />
+          <label for="samtykke-bef">
+            Ja, noXcuse kan kontakte meg om denne henvendelsen. Vi lagrer opplysningene så lenge
+            det er nødvendig for å følge den opp, og deler dem ikke med andre enn selskapene som
+            er involvert i leveransen. Du kan be om innsyn eller sletting når som helst.
+          </label>
+        </div>
+
+        <button type="submit" class="skjema__knapp">Book befaring</button>
+
+        <p class="skjema__under">Vi ringer deg for å avtale tidspunkt.</p>
+        <p class="skjema__under">{svartid}</p>
+      </form>
+    </div>
+  </section>
+</Side>
+
+<style>
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-6) var(--spacing-side-x) var(--spacing-rom-4);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 24ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  .hva-far {
+    background-color: var(--color-lin);
+  }
+  .hva-far__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x);
+  }
+  .hva-far__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .hva-far__liste {
+    margin: 0;
+    padding-left: var(--spacing-rom-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+  .hva-far__liste li {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+  }
+
+  .skjema {
+    background-color: var(--color-bomull);
+  }
+  .skjema__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x) var(--spacing-rom-6);
+  }
+  .skjema__h2 {
+    font-size: var(--text-h3);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .skjema__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-2);
+  }
+  .skjema__honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .skjema__felt {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+  .skjema__felt label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+  }
+  .skjema__felt input {
+    min-height: 48px;
+    padding: var(--spacing-rom-1) var(--spacing-rom-2);
+    border: 1px solid var(--color-kant-sterk);
+    border-radius: var(--radius-knapp);
+    background-color: var(--color-bomull);
+    color: var(--color-marine);
+    font-size: var(--text-brod);
+    font-family: var(--font-tekst);
+  }
+  .skjema__samtykke {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-rom-1);
+    margin-top: var(--spacing-rom-1);
+  }
+  .skjema__samtykke input {
+    margin-top: 0.3em;
+    flex-shrink: 0;
+  }
+  .skjema__samtykke label {
+    font-size: var(--text-mikro);
+    color: var(--color-marine-80);
+  }
+  .skjema__knapp {
+    min-height: 48px;
+    padding: var(--spacing-rom-2) var(--spacing-rom-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-knapp);
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-brod);
+    cursor: pointer;
+    transition: background-color var(--tid-nor) var(--ease-brand);
+  }
+  .skjema__knapp:hover {
+    background-color: color-mix(in srgb, var(--color-marine) 88%, black);
+  }
+  .skjema__under {
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    margin: 0;
+  }
+</style>

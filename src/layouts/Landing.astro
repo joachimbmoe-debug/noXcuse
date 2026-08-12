@@ -1,0 +1,49 @@
+---
+// Landing.astro — til /kostnadsguiden (bygges i senere dispatch, kun stillas nå).
+// Uten distraksjon: <head> + skip-link, INGEN <Nav>, og kun bunnlinjen fra Footer
+// (variant="minimal") — ikke de fire kolonnene.
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props as Props;
+---
+
+<html lang="nb">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a href="#hovedinnhold" class="skip-link">Hopp til hovedinnhold</a>
+    <main id="hovedinnhold">
+      <slot />
+    </main>
+    <Footer variant="minimal" />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: var(--spacing-rom-2);
+    top: -100px;
+    z-index: 1000;
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+    padding: var(--spacing-rom-2) var(--spacing-rom-3);
+    border-radius: var(--radius-knapp);
+    text-decoration: none;
+    font-weight: 600;
+    transition: top var(--tid-nor) var(--ease-brand);
+  }
+  .skip-link:focus-visible {
+    top: var(--spacing-rom-2);
+  }
+</style>

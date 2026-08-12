@@ -1,0 +1,181 @@
+---
+// Footer — se DESIGN.md §1/§9 og 04_TEKST_ALLE_SIDER.md §1.11 (kopiert ordrett).
+//
+// variant="minimal" brukes av Landing.astro — kun bunnlinjen (juridisk/produksjonstekst),
+// ingen kolonner. "levert som avtalt" er tagline og vises KUN her (kolonne 1, variant="full"),
+// aldri i løpende tekst noe annet sted.
+//
+// Alle kontaktfakta går via faktaEllerPlassholder() — ingen hardkodet plassholderstreng.
+//
+// LEAD-rettelse etter verifikasjon (se .foreman/ledger.md, Kjøring 3):
+// 1. config.ts manglet ADRESSE — lagt til der, brukes nå herfra i stedet for en direkte
+//    null-verdi.
+// 2. Fokusringen arvet --gull-dyp fra global.css uansett bakgrunn. På denne marine flaten
+//    gir det ~2,5:1 — samme dårlige tall som CLAUDE.md sin fargeregel advarer mot for
+//    "gull tekst på marine". Rettet nedenfor: --color-gull (lys gull, ~8,7:1 på marine)
+//    brukes for fokusringen kun innenfor footer. Bekreftet med bruker: #856629 beholdes
+//    som gull-tekst-på-lyst (5,74:1, uendret), problemet var kun fokusringen på mørk bunn.
+// 3. "Informasjonskapsler" var en oppdiktet rute — ingen slik side finnes i sideinventaret.
+//    Fjernet herfra, loggført i MANGLER.md. "Kjøpsbetingelser" beholdt — den er allerede
+//    ventet i MANGLER.md #19.
+import { config } from '../config';
+import { faktaEllerPlassholder } from '../lib/bekreft';
+import Logo from './Logo.astro';
+
+interface Props {
+  variant?: 'full' | 'minimal';
+}
+const { variant = 'full' } = Astro.props as Props;
+
+const telefon = faktaEllerPlassholder(config.TELEFON, 'Telefon');
+const epost = faktaEllerPlassholder(config.EPOST, 'E-post');
+const adresse = faktaEllerPlassholder(config.ADRESSE, 'Adresse');
+const orgnr = faktaEllerPlassholder(config.ORGNR, 'Org.nr.');
+const importselskap = faktaEllerPlassholder(config.IMPORTSELSKAP, 'Importselskapets navn');
+
+const sider = [
+  { href: '/modeller', label: 'Modeller' },
+  { href: '/hva-koster-det', label: 'Hva koster det' },
+  { href: '/slik-gjor-vi-det', label: 'Slik gjør vi det' },
+  { href: '/kvalitet', label: 'Kvalitet' },
+  { href: '/om-oss', label: 'Om oss' },
+];
+---
+
+<footer class="footer">
+  {variant === 'full' && (
+    <div class="footer__grid">
+      <div class="footer__col">
+        <Logo flate="marine" class="footer__logo" />
+        <p class="footer__tagline">levert som avtalt</p>
+        <p class="footer__legal">No Xcuse AS · Org.nr. {orgnr}</p>
+      </div>
+
+      <nav class="footer__col" aria-label="Sider">
+        <h2 class="footer__heading">Sider</h2>
+        <ul>
+          {sider.map((s) => (
+            <li><a href={s.href}>{s.label}</a></li>
+          ))}
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__col" id="kontakt">
+        <h2 class="footer__heading">Kontakt</h2>
+        <ul class="footer__kontakt">
+          <li>{telefon}</li>
+          <li>{epost}</li>
+          <li>{adresse}</li>
+        </ul>
+      </div>
+
+      <nav class="footer__col" aria-label="Juridisk">
+        <h2 class="footer__heading">Juridisk</h2>
+        <ul>
+          <li><a href="/personvern">Personvern</a></li>
+          <li><a href="/kjopsbetingelser">Kjøpsbetingelser</a></li>
+        </ul>
+      </nav>
+    </div>
+  )}
+
+  <div class="footer__bunnlinje">
+    <p>
+      Husene produseres av Husvik 3D SIA i Riga, Latvia. Avtale og garanti med {importselskap}, etter
+      bustadoppføringslova § 12.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+  }
+
+  /* --gull-dyp (global focus-ring farge) er kalibrert for lys bakgrunn, 5,74:1.
+     På denne marine flaten gir den ~2,5:1 — under kravet for et fokusindikator.
+     --color-gull (lys gull) gir ~8,7:1 på marine og brukes derfor kun her. */
+  .footer :focus-visible {
+    outline-color: var(--color-gull);
+  }
+
+  .footer__grid {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-6) var(--spacing-side-x);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-5);
+  }
+
+  @media (min-width: 768px) {
+    .footer__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* :global() nødvendig — Logo.astro rendrer selve elementet i sitt eget scope,
+     så en vanlig scoped selektor her ville aldri truffet det (Astro-scoping er
+     per komponent, ikke per class-prop). */
+  .footer :global(.footer__logo) {
+    align-items: flex-start;
+    margin-bottom: var(--spacing-rom-2);
+  }
+
+  .footer__tagline {
+    color: var(--color-gull);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+
+  .footer__legal {
+    color: color-mix(in srgb, var(--color-bomull) 75%, transparent);
+    font-size: var(--text-liten);
+    margin: 0;
+  }
+
+  .footer__heading {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-mikro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gull);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+
+  .footer__col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+  }
+
+  .footer__col a {
+    color: var(--color-bomull);
+    text-decoration: none;
+  }
+  .footer__col a:hover {
+    color: var(--color-gull);
+    text-decoration: underline;
+  }
+
+  .footer__kontakt li {
+    color: color-mix(in srgb, var(--color-bomull) 90%, transparent);
+    font-size: var(--text-liten);
+  }
+
+  .footer__bunnlinje {
+    border-top: 1px solid rgba(250, 248, 242, 0.16);
+  }
+  .footer__bunnlinje p {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-3) var(--spacing-side-x);
+    font-size: var(--text-liten);
+    color: color-mix(in srgb, var(--color-bomull) 75%, transparent);
+  }
+</style>

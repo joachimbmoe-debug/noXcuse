@@ -1,0 +1,149 @@
+---
+// Prosess — "Slik gjør vi det", forsidens §1.7 i 04_TEKST_ALLE_SIDER.md. Kopiert ordrett.
+// Seks trinn (kilden er eksplisitt: "Seks trinn, horisontal tidslinje på desktop,
+// vertikal på mobil") — ikke anta et annet antall.
+//
+// Enkel versjon til Fase 3 steg 7 (forsiden). Denne komponenten gjenbrukes senere på
+// /slik-gjor-vi-det med samme trinn utdypet (se 04_TEKST_ALLE_SIDER.md §5) — det er en
+// egen, senere dispatch, ikke løst her.
+//
+// Leveringstid i uker er BEKREFT-punkt (§1.7 i kilden) og nevnes derfor ikke her —
+// ingen tid loves uten bekreftet fabrikkapasitet.
+//
+// RETTET av LEAD: gjenbrukt nå på /slik-gjor-vi-det (steg 12) — der pekte
+// "Se hele prosessen"-knappen på seg selv. `visCta`-prop lagt til (default true,
+// uendret oppførsel på forsiden), satt til false fra slik-gjor-vi-det.astro.
+import Knapp from './Knapp.astro';
+
+interface Props {
+  visCta?: boolean;
+}
+const { visCta = true } = Astro.props as Props;
+
+const trinn = [
+  { tittel: 'Befaring eller mulighetsvurdering.', tekst: 'Vi ser på tomta di og sier hva som kan bygges der. Ingen synsing.' },
+  { tittel: 'Valg av modell og leveransenivå.', tekst: 'Du får pris med nivå, og oversikt over hva du må ordne selv.' },
+  { tittel: 'Kontrakt.', tekst: 'Avtalen inngås med importselskapet, som stiller garanti etter bustadoppføringslova § 12. Du får vite nøyaktig hvem som er avtalepart.' },
+  { tittel: 'Du klargjør tomta.', tekst: 'Fundament, vann og avløp, strøm, fiber. Vi sier hva som må være på plass, og når.' },
+  { tittel: 'Vi bygger og leverer.', tekst: 'Huset bygges i fabrikk mens tomta gjøres klar, og kjøres til deg på trailer.' },
+  { tittel: 'Montasje og overtakelse.', tekst: 'Huset settes ned, kobles til og overleveres.' },
+];
+---
+
+<section class="prosess" aria-labelledby="prosess-h2">
+  <div class="prosess__inner">
+    <h2 id="prosess-h2" class="prosess__h2">Fra første samtale til nøkkel i hånda</h2>
+
+    <ol class="prosess__liste">
+      {trinn.map((t, i) => (
+        <li class="prosess__trinn">
+          <span class="prosess__nummer" aria-hidden="true">{i + 1}</span>
+          <div class="prosess__innhold">
+            <p class="prosess__tittel">{t.tittel}</p>
+            <p class="prosess__tekst">{t.tekst}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    {visCta && (
+      <Knapp variant="sekundaer" href="/slik-gjor-vi-det">Se hele prosessen</Knapp>
+    )}
+  </div>
+</section>
+
+<style>
+  .prosess__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+
+  .prosess__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-5);
+  }
+
+  .prosess__liste {
+    list-style: none;
+    margin: 0 0 var(--spacing-rom-5);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-4);
+  }
+
+  .prosess__trinn {
+    display: flex;
+    gap: var(--spacing-rom-2);
+    position: relative;
+    padding-bottom: var(--spacing-rom-4);
+    border-left: 1px solid var(--color-kant);
+    padding-left: var(--spacing-rom-3);
+    margin-left: 15px;
+  }
+  .prosess__trinn:last-child {
+    border-left-color: transparent;
+    padding-bottom: 0;
+  }
+
+  .prosess__nummer {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-left: calc(-15px - var(--spacing-rom-3) - 16px);
+    border-radius: 50%;
+    background-color: var(--color-marine);
+    color: var(--color-bomull);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-liten);
+  }
+
+  .prosess__tittel {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+
+  .prosess__tekst {
+    font-size: var(--text-liten);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  /* Desktop: horisontal tidslinje — seks kolonner med linje over hvert trinn i stedet
+     for til venstre. Kilden krever "horisontal tidslinje på desktop". */
+  @media (min-width: 1024px) {
+    .prosess__liste {
+      flex-direction: row;
+      gap: var(--spacing-rom-3);
+    }
+
+    .prosess__trinn {
+      flex-direction: column;
+      border-left: none;
+      border-top: 2px solid var(--color-kant);
+      padding-left: 0;
+      padding-top: var(--spacing-rom-3);
+      padding-bottom: 0;
+      margin-left: 0;
+    }
+    .prosess__trinn:last-child {
+      border-top-color: var(--color-kant);
+    }
+
+    .prosess__nummer {
+      margin-left: 0;
+      margin-bottom: var(--spacing-rom-2);
+    }
+  }
+</style>

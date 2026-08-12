@@ -1,0 +1,257 @@
+---
+// `/hva-koster-det` — pilarsiden. Fase 3 steg 11, 01_BYGGEPLAN.md ("Pilarsiden, lengste
+// tekstsiden"). All tekst kopiert ordrett fra 04_TEKST_ALLE_SIDER.md § 4.
+//
+// Seksjonsrekkefølge følger kildens fem punkter under "Seksjoner:":
+//   1. De tre leveransenivåene — utdypet          → <Kostnadstrapp /> gjenbrukt direkte.
+//      Komponenten rendrer allerede leveransenivaa.ts (samme kilde, §1.3) med
+//      beskrivelse + ikkeInkludert + forutsetter per nivå — det ER "utdypet, med hva
+//      som ligger i hvert". Bygget på nytt her ville dupliserlt data og drevet to
+//      sannheter fra én kilde. Se ticket-instruksen om nettopp dette valget.
+//   2. De seks postene du ordner selv — kildens egne "hva som avgjør kostnaden"-
+//      fragmenter (§4, punkt 2) er ikke identiske med ordner-selv.ts (§1.4, "hva det
+//      er"-vinkling) — de er en annen, mer prisfokusert linse på de samme seks postene.
+//      Derfor bygget som egen seksjon under, ikke <OrdnerSelv /> (som ville gjentatt
+//      §1.4 ordrett og IKKE svart på "hva som avgjør kostnaden"). Postnavn matcher
+//      ordner-selv.ts sin kanoniske navngiving, bortsett fra "Gebyrer" som kildens §4
+//      selv skriver kortere enn §1.4s "Offentlige gebyrer" — beholdt som kilden skriver.
+//   3. Slik leser du en pris fra hvem som helst — de tre spørsmålene, ordrett blokksitat.
+//   4. Våre priser — lenke til modeller. Ingressen gjenbruker §1.5-setningen ordrett
+//      (samme setning som index.astro allerede bruker om modellene) i stedet for å
+//      finne på ny tekst om noe kilden ikke skriver egen kopi til her.
+//   5. Kostnadsguiden — nedlastingsskjema → <LeadBaand /> gjenbrukt direkte. Komponenten
+//      er selv dokumentert som den bevisste erstatningen for et ekte skjema før Fase 4
+//      ("en ærlig CTA-knapp ... er tryggere enn en falsk boks") — nøyaktig det denne
+//      seksjonen trenger. Ingen nytt skjema bygget her.
+//
+// ⚠️ Ingen konkurrentnavn på denne siden (§4-advarsel). Ingen konkurrentnavn under.
+import Side from '../layouts/Side.astro';
+import Knapp from '../components/Knapp.astro';
+import Kostnadstrapp from '../components/Kostnadstrapp.astro';
+import LeadBaand from '../components/LeadBaand.astro';
+---
+
+<Side
+  title="noXcuse — Hva koster et småhus, egentlig?"
+  description="Det korte svaret: det kommer an på hvor mye av jobben som er med i prisen. Det lange svaret er denne siden — og den er skrevet slik at du kan bruke den også hvis du kjøper av noen andre enn oss."
+>
+  {/* Hero */}
+  <section class="hero reveal" data-reveal aria-labelledby="hero-h1">
+    <div class="hero__inner">
+      <h1 id="hero-h1" class="hero__h1">Hva koster et småhus, egentlig?</h1>
+      <p class="hero__ingress">
+        Det korte svaret: det kommer an på hvor mye av jobben som er med i prisen. Det lange
+        svaret er denne siden — og den er skrevet slik at du kan bruke den også hvis du kjøper
+        av noen andre enn oss.
+      </p>
+    </div>
+  </section>
+
+  {/* 1. De tre leveransenivåene — utdypet */}
+  <Kostnadstrapp />
+
+  {/* 2. De seks postene du ordner selv — hva som avgjør kostnaden på hver */}
+  <section class="postene reveal" data-reveal aria-labelledby="postene-h2">
+    <div class="postene__inner">
+      <h2 id="postene-h2" class="postene__h2">De seks postene du ordner selv</h2>
+
+      <ul class="postene__grid">
+        <li class="postene__post">
+          <h3 class="postene__navn">Fundament</h3>
+          <p class="postene__etikett">Hva som avgjør kostnaden</p>
+          <p class="postene__tekst">grunnforhold, fall, adkomst for kran</p>
+        </li>
+        <li class="postene__post">
+          <h3 class="postene__navn">Vann og avløp</h3>
+          <p class="postene__etikett">Hva som avgjør kostnaden</p>
+          <p class="postene__tekst">avstand til kommunal ledning, eller borebrønn og renseanlegg</p>
+        </li>
+        <li class="postene__post">
+          <h3 class="postene__navn">Strøm</h3>
+          <p class="postene__etikett">Hva som avgjør kostnaden</p>
+          <p class="postene__tekst">avstand til nærmeste nettstasjon, tilknytningsavgift varierer mellom nettselskaper</p>
+        </li>
+        <li class="postene__post">
+          <h3 class="postene__navn">Fiber</h3>
+          <p class="postene__etikett">Hva som avgjør kostnaden</p>
+          <p class="postene__tekst">framføring, ofte den billigste posten</p>
+        </li>
+        <li class="postene__post">
+          <h3 class="postene__navn">Tomt</h3>
+          <p class="postene__etikett">Hva som avgjør kostnaden</p>
+          <p class="postene__tekst">kjøp, fradeling, eller allerede eid</p>
+        </li>
+        <li class="postene__post">
+          <h3 class="postene__navn">Gebyrer</h3>
+          <p class="postene__etikett">Hva som avgjør kostnaden</p>
+          <p class="postene__tekst">byggesak, tilknytning, oppmåling — varierer mye mellom kommuner</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  {/* 3. Slik leser du en pris fra hvem som helst — tre spørsmål, ordrett blokksitat */}
+  <section class="sporsmal reveal" data-reveal aria-labelledby="sporsmal-h2">
+    <div class="sporsmal__inner">
+      <h2 id="sporsmal-h2" class="sporsmal__h2">Slik leser du en pris fra hvem som helst</h2>
+      <p class="sporsmal__lead">Tre spørsmål å stille enhver leverandør:</p>
+
+      <ol class="sporsmal__liste">
+        <li>Hvilket leveransenivå gjelder denne prisen?</li>
+        <li>Hva av fundament, vann/avløp, strøm, fiber, tomt og gebyrer er med?</li>
+        <li>Er dette en pris dere faktisk kan levere til, eller en «fra»-pris?</li>
+      </ol>
+    </div>
+  </section>
+
+  {/* 4. Våre priser — lenke til modeller */}
+  <section class="priser reveal" data-reveal aria-labelledby="priser-h2">
+    <div class="priser__inner">
+      <h2 id="priser-h2" class="priser__h2">Våre priser</h2>
+      <p class="priser__tekst">
+        Komplette boenheter inntil 49 m². Bygget ferdig innendørs i fabrikk, transportert på
+        trailer og satt ned på tomta di.
+      </p>
+      <Knapp variant="sekundaer" href="/modeller">Se alle modeller</Knapp>
+    </div>
+  </section>
+
+  {/* 5. Kostnadsguiden — nedlastingsskjema */}
+  <LeadBaand />
+</Side>
+
+<style>
+  /* Hero — bomull, samme mønster som egen-entreprenor.astro/vi-tar-resten.astro
+     (--text-h2 for h1 på innholdssider — --text-hero er forsidens egen). */
+  .hero {
+    background-color: var(--color-bomull);
+  }
+  .hero__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-6) var(--spacing-side-x) var(--spacing-rom-4);
+  }
+  .hero__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 24ch;
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+
+  /* De seks postene — lin, mellom Kostnadstrapp (bomull) og spørsmålene (bomull). */
+  .postene {
+    background-color: var(--color-lin);
+  }
+  .postene__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .postene__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-5);
+  }
+  .postene__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-4);
+  }
+  @media (min-width: 640px) {
+    .postene__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .postene__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .postene__post {
+    background-color: var(--color-bomull);
+    border: 1px solid var(--color-kant);
+    border-radius: var(--radius-kort);
+    padding: var(--spacing-rom-3);
+  }
+  .postene__navn {
+    font-size: var(--text-brod);
+    font-weight: 600;
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .postene__etikett {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-mikro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-1);
+  }
+  .postene__tekst {
+    font-size: var(--text-liten);
+    color: var(--color-marine);
+    margin: 0;
+  }
+
+  /* Spørsmålene — bomull. */
+  .sporsmal {
+    background-color: var(--color-bomull);
+  }
+  .sporsmal__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .sporsmal__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .sporsmal__lead {
+    font-size: var(--text-stor);
+    color: var(--color-marine-80);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .sporsmal__liste {
+    margin: 0;
+    padding-left: var(--spacing-rom-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-2);
+  }
+  .sporsmal__liste li {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+  }
+
+  /* Våre priser — lin, siste seksjon før LeadBaand (marine). */
+  .priser {
+    background-color: var(--color-lin);
+  }
+  .priser__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .priser__h2 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .priser__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+</style>

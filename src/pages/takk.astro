@@ -1,0 +1,73 @@
+---
+// `/takk` — delt kvitteringsside for alle Netlify Forms-innsendinger. Fase 3
+// steg 13. Alle segmentskjemaene (`tomta-er-klar`, `vi-tar-resten`,
+// `egen-entreprenor` i denne runden) har `action="/takk"` og lander her.
+//
+// Nevner IKKE noe spor eller skjema ved navn — se ticketkontekst: en smartere
+// per-spor kvittering (§7-tabellen i 08_SEGMENTSIDER_TEKST.md har egne
+// takkeside-tekster per spor) ville krevd query-param-styrt JS eller en
+// Netlify Function, og er utenfor omfanget her. Fremtidig forbedring, ikke
+// bygget nå.
+//
+// Ingen svartid lovet. MANGLER.md #34 "Svartid per spor" og #15 "Befaring:
+// svartid" er begge ⚠️ BEKREFT — ingen tall finnes å hente inn her, og denne
+// siden dikter ikke opp ett. "Vi tar kontakt" uten tidsangivelse, i tråd med
+// samme forsiktighet som faktaEllerPlassholder()-mønsteret bruker på
+// segmentsidene.
+import Side from '../layouts/Side.astro';
+---
+
+<Side
+  title="noXcuse — Takk. Vi har fått meldingen din."
+  description="Vi har fått meldingen din. Vi går gjennom det du har sendt inn og tar kontakt."
+>
+  <section class="takk reveal" data-reveal aria-labelledby="takk-h1">
+    <div class="takk__inner">
+      <h1 id="takk-h1" class="takk__h1">Takk. Vi har fått meldingen din.</h1>
+      <p class="takk__tekst">
+        Vi går gjennom det du har sendt inn og tar kontakt på telefon eller e-post. Har du sendt
+        et skjema med adresse eller tomt, ser vi på det før vi svarer, så du får noe å stole på —
+        ikke bare et raskt svar.
+      </p>
+      <p class="takk__tekst">
+        Kommer det ikke noe fra oss, sjekk søppelpost i mellomtiden. Skjer det fortsatt ikke noe,
+        ta gjerne kontakt selv.
+      </p>
+      <a href="/" class="takk__lenke">Til forsiden</a>
+    </div>
+  </section>
+</Side>
+
+<style>
+  .takk {
+    background-color: var(--color-bomull);
+  }
+  .takk__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-6) var(--spacing-side-x);
+  }
+  .takk__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .takk__tekst {
+    font-size: var(--text-brod);
+    color: var(--color-marine-80);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .takk__lenke {
+    display: inline-block;
+    margin-top: var(--spacing-rom-2);
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-marine);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .takk__lenke:hover {
+    color: color-mix(in srgb, var(--color-marine) 80%, black);
+  }
+</style>

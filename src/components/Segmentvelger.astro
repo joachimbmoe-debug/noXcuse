@@ -1,0 +1,174 @@
+---
+// Segmentvelger — se DESIGN.md §6 og 08_SEGMENTSIDER_TEKST.md §1 (kopiert ordrett).
+// Plassering: rett under hero, over kostnadstrappen (04_TEKST_ALLE_SIDER.md/01_BYGGEPLAN.md
+// Fase 3 steg 7 kobler den inn der — denne komponenten er selvstendig og ukoblet foreløpig).
+//
+// Fire like store kort, ingen fremhevet — kilden er eksplisitt på dette ("Ingen fremhevet").
+// Kortdata kommer fra src/data/segmenter.ts (allerede verifisert ordrett mot kilden).
+//
+// Mobilkravet (kundens hardeste): alle fire kort skal være synlige uten scroll ved 360px
+// bredde når man når seksjonen. Løsning: 2×2-grid under 481px (ikke én stablet kolonne),
+// komprimert padding + 2-linjers klipp på kortTekst — aldri et droppet eller skjult kort.
+//
+// Navigasjon er ren <a href> — fungerer fullt uten JavaScript. Inline-scriptet under er kun
+// progressiv forbedring (lagrer valgt segment i sessionStorage til senere skjema/analytics-steg,
+// se segmenter.ts sin filkommentar) og er ikke en forutsetning for at lenkene virker.
+import { segmenter } from '../data/segmenter';
+import { config } from '../config';
+import { faktaEllerPlassholder } from '../lib/bekreft';
+
+const telefon = faktaEllerPlassholder(config.TELEFON, 'Telefon');
+---
+
+<section class="segmentvelger" aria-labelledby="segmentvelger-h2">
+  <div class="segmentvelger__inner">
+    <h2 id="segmentvelger-h2" class="segmentvelger__h2">Hvor langt har du kommet?</h2>
+    <p class="segmentvelger__ingress">
+      Folk kommer til oss fra fire forskjellige steder. Velg det som ligner mest på deg, så
+      slipper du å lese om alt det andre.
+    </p>
+
+    <div class="segmentvelger__grid">
+      {segmenter.map((s) => (
+        <a href={`/${s.slug}`} class="segmentvelger__kort" data-segment-nr={s.nr}>
+          <span class="segmentvelger__kort-tittel">{s.kortTittel}</span>
+          <span class="segmentvelger__kort-tekst">{s.kortTekst}</span>
+          <span class="segmentvelger__kort-cta">→ {s.kortCta}</span>
+        </a>
+      ))}
+    </div>
+
+    <p class="segmentvelger__fallback">
+      Kjenner du deg ikke igjen i noen av dem? Ring oss, så finner vi ut av det. {telefon}
+    </p>
+  </div>
+</section>
+
+<script>
+  // Progressiv forbedring, ikke en forutsetning for navigasjon — href alene er en
+  // komplett vei. Lagrer hvilket spor besøkende valgte, til senere bruk i skjema/analytics.
+  document.querySelectorAll<HTMLAnchorElement>('.segmentvelger__kort[data-segment-nr]').forEach((kort) => {
+    kort.addEventListener('click', () => {
+      const nr = kort.dataset.segmentNr;
+      if (nr) sessionStorage.setItem('noxcuse_segment', nr);
+    });
+  });
+</script>
+
+<style>
+  .segmentvelger {
+    background-color: var(--color-bomull);
+  }
+
+  .segmentvelger__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-5) var(--spacing-side-x);
+  }
+
+  .segmentvelger__h2 {
+    font-size: var(--text-h2);
+    margin: 0 0 var(--spacing-rom-2);
+  }
+
+  .segmentvelger__ingress {
+    max-width: var(--spacing-bredde-tekst);
+    font-size: var(--text-stor);
+    color: color-mix(in srgb, var(--color-marine) 82%, transparent);
+    margin: 0 0 var(--spacing-rom-4);
+  }
+
+  .segmentvelger__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-rom-2);
+  }
+
+  .segmentvelger__kort {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-rom-1);
+    padding: var(--spacing-rom-2);
+    background-color: var(--color-lin);
+    border: 1px solid var(--color-kant);
+    border-radius: var(--radius-kort);
+    text-decoration: none;
+    color: var(--color-marine);
+    transition: border-color var(--tid-nor) var(--ease-brand),
+      background-color var(--tid-nor) var(--ease-brand);
+  }
+  .segmentvelger__kort:hover {
+    border-color: var(--color-kant-sterk);
+    background-color: color-mix(in srgb, var(--color-lin) 60%, white);
+  }
+
+  .segmentvelger__kort-tittel {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-liten);
+    line-height: 1.25;
+    /* 2 linjer på det trangeste — 1 linje kutter meningsbærende ord midt i
+       («Du har tomt,…», «Du har tomt…») på to av de fire kortene. Med 2 linjer
+       leses hele tittelen, og det er fortsatt god margin til viewport-grensen
+       ved 360px (verifisert med Playwright, se rapport). */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .segmentvelger__kort-tekst {
+    font-size: var(--text-mikro);
+    color: color-mix(in srgb, var(--color-marine) 82%, transparent);
+    line-height: 1.4;
+    /* Klippes til 2 linjer på trange flater. Nettlesere uten line-clamp-støtte
+       viser bare hele teksten — graceful fallback, ingen brutt layout. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .segmentvelger__kort-cta {
+    margin-top: auto;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-mikro);
+    color: var(--color-gull-dyp);
+  }
+
+  .segmentvelger__fallback {
+    margin: var(--spacing-rom-4) 0 0;
+    font-size: var(--text-liten);
+    color: color-mix(in srgb, var(--color-marine) 82%, transparent);
+  }
+
+  /* 481–1023px: fortsatt 2×2, men fullere padding og lesbar tekst uten klipp */
+  @media (min-width: 481px) {
+    .segmentvelger__grid {
+      gap: var(--spacing-rom-3);
+    }
+
+    .segmentvelger__kort {
+      padding: var(--spacing-rom-3);
+      gap: var(--spacing-rom-2);
+    }
+
+    .segmentvelger__kort-tittel {
+      font-size: var(--text-stor);
+      -webkit-line-clamp: 2;
+    }
+
+    .segmentvelger__kort-tekst {
+      font-size: var(--text-liten);
+      -webkit-line-clamp: 3;
+    }
+  }
+
+  /* ≥1024px: én rad, alle fire synlige, ingen fremhevet kort */
+  @media (min-width: 1024px) {
+    .segmentvelger__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
