@@ -7,10 +7,10 @@ export const config = {
   GRENSESNITT_RUTINE: false,    // true når Erik bekrefter at rutinen mot kundens entreprenør finnes
   VIS_REFERANSER: false,        // true etter Eidsfoss-overtakelse 20.08.2026
 
-  ORGNR: null as string | null,          // BEKREFT — org.nr. for No Xcuse AS
+  ORGNR: "915612474" as string | null,   // Bekreftet av Joachim i samtale 2026-08-12
   TELEFON: "91661470" as string | null,        // Bekreftet av Joachim i samtale 2026-08-11
   EPOST: "erik@no-xcuse.no" as string | null,  // Bekreftet av Joachim i samtale 2026-08-11
-  ADRESSE: null as string | null,        // BEKREFT — postadresse, vises i footer
+  ADRESSE: "Gamleveien 35B, 1406 Ski" as string | null,  // Bekreftet av Joachim i samtale 2026-08-12
   DOMENE: "no-xcuse.no" as string | null,  // Bekreftet av Joachim i samtale 2026-08-12, satt i astro.config.mjs `site`
   IMPORTSELSKAP: "Levert Norge AS" as string | null,  // Bekreftet av Joachim i samtale 2026-08-12
 } as const;

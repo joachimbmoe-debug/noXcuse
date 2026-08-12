@@ -19,6 +19,7 @@
 // ikke listet noe sted. Flagg til Joachim om en tredje kategori-side trengs.
 import Side from '../../layouts/Side.astro';
 import ModellKort from '../../components/ModellKort.astro';
+import Knapp from '../../components/Knapp.astro';
 
 interface Modell {
   slug: string;
@@ -63,8 +64,8 @@ const modeller = Object.values(moduler)
       </div>
 
       <p class="modeller__hyttespor">
-        Ser du etter hytte? <a href="/vare-hytter">Se hyttene våre</a> — bygget etter samme
-        standard som husene.
+        Ser du etter hytte? <Knapp variant="tekstlenke" href="/vare-hytter">Se hyttene våre</Knapp>
+        — bygget etter samme standard som husene.
       </p>
     </div>
   </section>

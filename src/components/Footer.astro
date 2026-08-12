@@ -2,8 +2,9 @@
 // Footer — se DESIGN.md §1/§9 og 04_TEKST_ALLE_SIDER.md §1.11 (kopiert ordrett).
 //
 // variant="minimal" brukes av Landing.astro — kun bunnlinjen (juridisk/produksjonstekst),
-// ingen kolonner. "levert som avtalt" er tagline og vises KUN her (kolonne 1, variant="full"),
-// aldri i løpende tekst noe annet sted.
+// ingen kolonner. Taglinen "Levert som avtalt" lever i Logo.astro selv (gjeninnført
+// 2026-08-12) og vises derfor automatisk overalt Logo brukes — footer og nav — ikke
+// lenger en egen footer-spesifikk linje her (fjernet 2026-08-12, var en duplikat).
 //
 // Alle kontaktfakta går via faktaEllerPlassholder() — ingen hardkodet plassholderstreng.
 //
@@ -47,7 +48,6 @@ const sider = [
     <div class="footer__grid">
       <div class="footer__col">
         <Logo flate="marine" class="footer__logo" />
-        <p class="footer__tagline">levert som avtalt</p>
         <p class="footer__legal">No Xcuse AS · Org.nr. {orgnr}</p>
       </div>
 
@@ -122,11 +122,6 @@ const sider = [
   .footer :global(.footer__logo) {
     align-items: flex-start;
     margin-bottom: var(--spacing-rom-2);
-  }
-
-  .footer__tagline {
-    color: var(--color-gull-marine);
-    margin: 0 0 var(--spacing-rom-2);
   }
 
   .footer__legal {

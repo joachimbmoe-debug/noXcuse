@@ -51,7 +51,7 @@ const lenker = [
 
 <header class={['nav', floatOverHero && 'nav--over'].filter(Boolean).join(' ')} data-nav={floatOverHero ? true : undefined}>
   <div class="nav__inner">
-    <a href="/" class="nav__logo" aria-label="noXcuse — til forsiden"><Logo flate="lys" /></a>
+    <a href="/" class="nav__logo" aria-label="noXcuse — til forsiden"><Logo flate="marine" /></a>
 
     {/* Desktop (≥1024px) — egen, alltid synlig menylinje, IKKE inni <details>.
         Chrome legger et internt, ikke-adresserbart "lukket details"-lag rundt
@@ -127,19 +127,30 @@ const lenker = [
 </script>
 
 <style>
+  /* Blå (marine) menybakgrunn på alle 16 undersider — Joachim, 2026-08-12:
+     "blå bakgrunn på alle menyer på alle undersider". Forsiden sin flytende
+     meny (.nav--over) er urørt av dette til den blir solid ved scroll (se
+     .nav--over.is-solid lenger ned, som nå matcher denne samme fargebruken). */
   .nav {
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: var(--color-bomull);
-    border-bottom: 1px solid var(--color-kant);
+    background-color: var(--color-marine);
+    border-bottom: 1px solid transparent;
     box-shadow: 0 0 0 0 transparent;
     transition: box-shadow var(--tid-nor) var(--ease-brand), border-color var(--tid-nor) var(--ease-brand);
   }
 
   .nav--scrolled {
-    border-bottom-color: transparent;
     box-shadow: var(--shadow-skygge);
+  }
+
+  /* Fokusring: global.css sin :focus-visible bruker --color-gull-tekst
+     (bronse), kalibrert for lys bakgrunn — ~2,5:1 på marine, under AA.
+     Samme fiks som Footer.astro sin tilsvarende .footer :focus-visible-
+     regel. */
+  .nav :global(:focus-visible) {
+    outline-color: var(--color-gull-marine);
   }
 
   .nav__inner {
@@ -202,7 +213,7 @@ const lenker = [
     left: 0;
     right: 0;
     height: 2px;
-    background-color: var(--color-marine);
+    background-color: var(--color-dark-text);
     transition: transform var(--tid-nor) var(--ease-brand), opacity var(--tid-nor) var(--ease-brand);
   }
   .nav__hamburger span:nth-child(1) { top: 0; }
@@ -227,7 +238,7 @@ const lenker = [
     flex-direction: column;
     gap: var(--spacing-rom-3);
     padding: var(--spacing-rom-3) var(--spacing-side-x) var(--spacing-rom-4);
-    border-top: 1px solid var(--color-kant);
+    border-top: 1px solid color-mix(in srgb, var(--color-dark-text) 20%, transparent);
   }
 
   .nav__list {
@@ -241,12 +252,12 @@ const lenker = [
   .nav__list a {
     display: block;
     padding: var(--spacing-rom-1) 0;
-    color: var(--color-marine);
+    color: var(--color-dark-text);
     text-decoration: none;
     font-weight: 500;
   }
   .nav__list a:hover {
-    color: var(--color-gull-tekst);
+    color: var(--color-gull-marine);
   }
 
   @media (min-width: 1024px) {
@@ -316,34 +327,34 @@ const lenker = [
      (.nav-links { background: #f7f4ef } uavhengig av .nav--over/.is-solid):
      en gjennomsiktig meny med lys tekst ville vært ulesbar der panelet
      folder seg ut over vilkårlig fotoinnhold. */
+  /* Solid tilstand = samme blå meny som de 16 undersidene nå bruker som
+     standard (Joachim, 2026-08-12: "tilsvarende på forsiden når man scroller
+     ned"). */
   .nav--over.is-solid,
   .nav--over:has(.nav__toggle[open]) {
     position: fixed;
-    background-color: var(--color-bomull);
-    border-bottom-color: var(--color-kant);
+    background-color: var(--color-marine);
+    border-bottom-color: transparent;
     box-shadow: var(--shadow-skygge);
   }
   .nav--over.is-solid .nav__hamburger span,
   .nav--over:has(.nav__toggle[open]) .nav__hamburger span {
-    background-color: var(--color-marine);
+    background-color: var(--color-dark-text);
   }
   .nav--over.is-solid .nav__list a,
   .nav--over:has(.nav__toggle[open]) .nav__list a {
-    color: var(--color-marine);
+    color: var(--color-dark-text);
   }
   .nav--over.is-solid .nav__list a:hover,
   .nav--over:has(.nav__toggle[open]) .nav__list a:hover {
-    color: var(--color-gull-tekst);
+    color: var(--color-gull-marine);
   }
-  /* Solid tilstand: ord og X bytter farge (motsatt av over-hero-tilstanden).
-     Taket følger X — samme "tak = X sin farge"-regel som over, derfor gull
-     her (X er gull i denne tilstanden), til tross for at gull-marine på lys
-     flate ellers er en "aldri"-regel i fargesystemet (1,5:1 kontrast).
-     Joachim bekreftet eksplisitt at tak-følger-X skal gjelde overalt.
-     Dokumentert i .foreman/ledger.md. */
+  /* Logo i solid tilstand — samme skjema som .logo--marine (footer): ordet
+     alene i gull-marine, tak+X+tagline i bomull (hvit), «tak = X sin farge»
+     -regelen fra Joachim gjelder fortsatt. */
   .nav--over.is-solid .nav__logo :global(.logo-word),
   .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-word) {
-    color: var(--color-marine);
+    color: var(--color-gull-marine);
   }
   .nav--over.is-solid .nav__logo :global(.logo-roof),
   .nav--over.is-solid .nav__logo :global(.logo-x),
@@ -351,7 +362,7 @@ const lenker = [
   .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-roof),
   .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-x),
   .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-tagline) {
-    color: var(--color-gull-marine);
+    color: var(--color-bomull);
   }
 
   /* Uten JS blir .is-solid aldri satt, og menyen ville stått med lys tekst på
@@ -366,22 +377,22 @@ const lenker = [
      ikke kan ligge der i stedet). */
   :global(.no-js) .nav--over {
     position: fixed;
-    background-color: var(--color-bomull);
-    border-bottom-color: var(--color-kant);
+    background-color: var(--color-marine);
+    border-bottom-color: transparent;
     box-shadow: var(--shadow-skygge);
   }
   :global(.no-js) .nav--over .nav__hamburger span {
-    background-color: var(--color-marine);
+    background-color: var(--color-dark-text);
   }
   :global(.no-js) .nav--over .nav__list a {
-    color: var(--color-marine);
+    color: var(--color-dark-text);
   }
   :global(.no-js) .nav--over .nav__logo :global(.logo-word) {
-    color: var(--color-marine);
+    color: var(--color-gull-marine);
   }
   :global(.no-js) .nav--over .nav__logo :global(.logo-roof),
   :global(.no-js) .nav--over .nav__logo :global(.logo-x),
   :global(.no-js) .nav--over .nav__logo :global(.logo-tagline) {
-    color: var(--color-gull-marine);
+    color: var(--color-bomull);
   }
 </style>

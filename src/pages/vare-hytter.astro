@@ -1,0 +1,108 @@
+---
+// Våre hytter `/vare-hytter` — ny side, D16 (Joachim, 2026-08-12).
+// Speiler /modeller/index.astro sitt mønster, men filtrert til
+// kategori === 'hytte' i stedet for 'helaarsbolig'. Samme mal, samme
+// datamodell (src/data/modeller/*.json) — hyttene er ikke en egen
+// produktlinje i dataene, bare et annet filter over samme filsett.
+//
+// Ingen egen tekst finnes i 04_TEKST_ALLE_SIDER.md for denne siden (den
+// fantes ikke i spec-en) — teksten under er skrevet av LEAD, holdt kort og
+// faktuelt i samme tone som /modeller sin ingress, ingen oppdiktede fakta.
+import Side from '../layouts/Side.astro';
+import ModellKort from '../components/ModellKort.astro';
+import Knapp from '../components/Knapp.astro';
+
+interface Modell {
+  slug: string;
+  navn: string | null;
+  kvadratmeter: number | null;
+  kategori: 'helaarsbolig' | 'hytte' | 'utleieenhet';
+}
+
+const moduler = import.meta.glob<{ default: Modell }>('../data/modeller/*.json', {
+  eager: true,
+});
+
+const hytter = Object.values(moduler)
+  .map((modul) => modul.default)
+  .filter((modell) => modell.kategori === 'hytte')
+  .sort((a, b) => a.slug.localeCompare(b.slug));
+---
+
+<Side
+  title="noXcuse — Våre hytter"
+  description="Komplette hytter inntil 49 m², bygget etter samme standard som husene våre. Alle bygges ferdig i fabrikk og leveres på trailer."
+>
+  <section class="hytter reveal" data-reveal aria-labelledby="hytter-h1">
+    <div class="hytter__inner">
+      <h1 id="hytter-h1" class="hytter__h1">Våre hytter</h1>
+      <p class="hytter__ingress">
+        Komplette hytter inntil 49 m², bygget etter nøyaktig samme standard som husene våre.
+        Alle bygges ferdig i fabrikk og leveres på trailer. Alle priser står med leveransenivå.
+      </p>
+
+      <div class="hytter__grid">
+        {
+          hytter.map((modell) => (
+            <ModellKort
+              navn={modell.navn}
+              kvadratmeter={modell.kvadratmeter}
+              bildeAlt="Plassholder — modellbilde fra Husvik er ikke levert ennå"
+              href={`/modeller/${modell.slug}`}
+            />
+          ))
+        }
+      </div>
+
+      <p class="hytter__husspor">
+        Ser du etter helårsbolig? <Knapp variant="tekstlenke" href="/modeller">Se husene våre</Knapp>
+        — samme fabrikk, samme kvalitet.
+      </p>
+    </div>
+  </section>
+</Side>
+
+<style>
+  .hytter {
+    background-color: var(--color-bomull);
+  }
+  .hytter__inner {
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-seksjon-y) var(--spacing-side-x);
+  }
+  .hytter__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    max-width: 20ch;
+    margin: 0 0 var(--spacing-rom-2);
+  }
+  .hytter__ingress {
+    font-size: var(--text-stor);
+    color: var(--color-stein);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0 0 var(--spacing-rom-5);
+  }
+  .hytter__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-rom-3);
+    margin-bottom: var(--spacing-rom-5);
+  }
+  @media (min-width: 640px) {
+    .hytter__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .hytter__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .hytter__husspor {
+    font-size: var(--text-liten);
+    color: var(--color-stein);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+</style>

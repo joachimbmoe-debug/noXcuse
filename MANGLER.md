@@ -6,7 +6,7 @@
 > bygging, ikke i kilden». Kryss av `[x]` og skriv svaret rett i lista når noe blir bekreftet — ikke
 > flytt det til en annen fil.
 
-**Oppdatert sist:** 2026-08-12 — telefon, e-post, importselskapets navn (Levert Norge AS) og domene (no-xcuse.no) bekreftet av Joachim, resten uendret.
+**Oppdatert sist:** 2026-08-12 — telefon, e-post, importselskapets navn (Levert Norge AS), domene (no-xcuse.no), org.nr (915612474) og postadresse (Gamleveien 35B, 1406 Ski) bekreftet av Joachim. «Grunnfakta»-gruppen under Erik er nå komplett.
 
 ---
 
@@ -24,10 +24,10 @@ De tyngste blokkerne — én stopper to hele kundesegmenter, én er en juridisk 
 
 ### Grunnfakta (kontaktinfo, juridisk enhet)
 
-- [ ] **[#1] Org.nr. for No Xcuse AS** — brukes i footer, personvern, kjøpsbetingelser.
+- [x] **[#1] Org.nr. for No Xcuse AS** — **915612474**. Bekreftet av Joachim 2026-08-12, satt i `config.ts`.
 - [x] **[#2] Telefonnummer** — **91661470**. Bekreftet av Joachim 2026-08-11, satt i `config.ts`.
 - [x] **[#3] E-postadresse** — **erik@no-xcuse.no**. Bekreftet av Joachim 2026-08-11, satt i `config.ts`.
-- [ ] **[#10b] Postadresse** — ikke i kilde-BEKREFT-lista, oppdaget ved bygging av Footer. Lagt til som `config.ADRESSE`.
+- [x] **[#10b] Postadresse** — **Gamleveien 35B, 1406 Ski**. Bekreftet av Joachim 2026-08-12, satt i `config.ADRESSE`.
 - [x] **[#9] Importselskapets navn** — **Levert Norge AS**. Bekreftet av Joachim 2026-08-12, satt i `config.ts`.
 
 ### Priser
