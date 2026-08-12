@@ -11,7 +11,7 @@
 // sitt eget ekte skjema i en senere dispatch) er tryggere enn en falsk boks. Flagget i
 // rapport.
 //
-// Marine flate — fokusring MÅ overstyres til --color-gull, ikke arvet --color-gull-dyp
+// Marine flate — fokusring MÅ overstyres til --color-gull-marine, ikke arvet --color-gull-tekst
 // (~2,5:1 på marine). Se DESIGN.md §6 og Footer.astro sitt mønster.
 import Knapp from './Knapp.astro';
 ---
@@ -39,9 +39,9 @@ import Knapp from './Knapp.astro';
     color: var(--color-bomull);
   }
 
-  /* Se DESIGN.md §6 — --color-gull-dyp er kalibrert for lys bakgrunn, ikke marine. */
+  /* Se DESIGN.md §6 — --color-gull-tekst er kalibrert for lys bakgrunn, ikke marine. */
   .lead-baand :focus-visible {
-    outline-color: var(--color-gull);
+    outline-color: var(--color-gull-marine);
   }
 
   .lead-baand__inner {

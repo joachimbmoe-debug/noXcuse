@@ -1,13 +1,22 @@
 ---
 // Modelloversikt `/modeller` — fase 3 steg 10, 01_BYGGEPLAN.md.
-// Tekst kopiert ordrett fra 04_TEKST_ALLE_SIDER.md §2 "Modelloversikt /modeller".
+// Tekst opprinnelig kopiert ordrett fra 04_TEKST_ALLE_SIDER.md §2
+// "Modelloversikt /modeller" — tilpasset 2026-08-12 til å vise kun
+// helårsbolig-kategorien, se D16 under.
 //
 // Én mal, mange innganger: alle kortene under kommer fra src/data/modeller/*.json.
 // Ny modell = ny JSON-fil i den mappa. Ingen kodeendring her eller i [slug].astro.
 //
-// Ingen filter-UI (Alle · Helårsbolig · Hytte · Utleieenhet) — §2 sier eksplisitt
-// at filtrene aktiveres først når modelloversikten faktisk har disse kategoriene
-// i praksis (ekte modeller, ikke bare plassholdere). Bevisst utelatt, ikke glemt.
+// D16 (Joachim, 2026-08-12): «Modellene våre» i menyen døpt om til «Våre hus»,
+// med en ny egen «Våre hytter»-side (src/pages/vare-hytter.astro) rett ved
+// siden av. Denne siden filtrerer nå til kategori === 'helaarsbolig' — det er
+// den kategorisplitten §2 sin opprinnelige filter-UI-plan (Alle · Helårsbolig
+// · Hytte · Utleieenhet, bevisst utsatt til kategoriene faktisk fantes) endte
+// opp med å bli løst som, bare via egne sider i stedet for en filterknapp.
+// «Utleieenhet»-kategorien (modell-c) er IKKE inkludert på noen av de to nye
+// sidene — verken «hus» eller «hytte» passer semantisk, og Joachim ba ikke om
+// en tredje meny-kategori. Fortsatt nåbar direkte på /modeller/modell-c, bare
+// ikke listet noe sted. Flagg til Joachim om en tredje kategori-side trengs.
 import Side from '../../layouts/Side.astro';
 import ModellKort from '../../components/ModellKort.astro';
 
@@ -24,16 +33,17 @@ const moduler = import.meta.glob<{ default: Modell }>('../../data/modeller/*.jso
 
 const modeller = Object.values(moduler)
   .map((modul) => modul.default)
+  .filter((modell) => modell.kategori === 'helaarsbolig')
   .sort((a, b) => a.slug.localeCompare(b.slug));
 ---
 
 <Side
-  title="noXcuse — Modellene"
+  title="noXcuse — Våre hus"
   description="Komplette boenheter inntil 49 m². Alle bygges ferdig i fabrikk og leveres på trailer. Alle priser står med leveransenivå."
 >
   <section class="modeller reveal" data-reveal aria-labelledby="modeller-h1">
     <div class="modeller__inner">
-      <h1 id="modeller-h1" class="modeller__h1">Modellene</h1>
+      <h1 id="modeller-h1" class="modeller__h1">Våre hus</h1>
       <p class="modeller__ingress">
         Komplette boenheter inntil 49 m². Alle bygges ferdig i fabrikk og leveres på trailer.
         Alle priser står med leveransenivå.
@@ -53,8 +63,8 @@ const modeller = Object.values(moduler)
       </div>
 
       <p class="modeller__hyttespor">
-        Hyttene i porteføljen bygges etter samme standard som helårsboligene. Vi har ennå ikke
-        levert hytter i Norge, og skriver derfor ikke om leverte hytteprosjekter før vi har dem.
+        Ser du etter hytte? <a href="/vare-hytter">Se hyttene våre</a> — bygget etter samme
+        standard som husene.
       </p>
     </div>
   </section>
@@ -77,7 +87,7 @@ const modeller = Object.values(moduler)
   }
   .modeller__ingress {
     font-size: var(--text-stor);
-    color: var(--color-marine-80);
+    color: var(--color-stein);
     max-width: var(--spacing-bredde-tekst);
     margin: 0 0 var(--spacing-rom-5);
   }
@@ -99,7 +109,7 @@ const modeller = Object.values(moduler)
   }
   .modeller__hyttespor {
     font-size: var(--text-liten);
-    color: var(--color-marine-80);
+    color: var(--color-stein);
     max-width: var(--spacing-bredde-tekst);
     margin: 0;
   }

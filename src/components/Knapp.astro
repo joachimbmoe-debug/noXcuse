@@ -71,11 +71,11 @@ const klasser = ['knapp', `knapp--${variant}`, klasse].filter(Boolean).join(' ')
   }
 
   .knapp--gull {
-    background-color: var(--color-gull);
+    background-color: var(--color-gull-marine);
     color: var(--color-marine);
   }
   .knapp--gull:hover {
-    background-color: color-mix(in srgb, var(--color-gull) 82%, white);
+    background-color: color-mix(in srgb, var(--color-gull-marine) 82%, white);
   }
 
   /* Tekstlenke — inline i løpende tekst, ikke en knapp-boks */
@@ -87,7 +87,7 @@ const klasser = ['knapp', `knapp--${variant}`, klasse].filter(Boolean).join(' ')
     background: none;
     font-family: var(--font-tekst);
     font-weight: 500;
-    color: var(--color-gull-dyp);
+    color: var(--color-gull-tekst);
     text-decoration: underline;
     text-underline-offset: 3px;
   }

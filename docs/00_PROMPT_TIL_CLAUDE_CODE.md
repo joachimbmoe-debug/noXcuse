@@ -97,7 +97,19 @@ Du skal ikke skrive ny tekst. Teksten ligger ferdig i `04_TEKST_ALLE_SIDER.md`. 
 
 Minimalistisk og moderne. Én retning, holdes hele veien.
 
-Marine `#172E57`, gull `#E3CEA4`, bomull `#FAF8F2`, lin `#F0ECE4`. Gull brukes **aldri** som tekst på lys bakgrunn — bruk `#7A5E1C` (målt 5,74:1). Montserrat til overskrifter, Inter til brødtekst, begge selvhostet som woff2.
+Marine `#172E57`, bomull `#FAF8F2`, lin `#F0ECE4`, papir `#FFFDF9`. Montserrat til overskrifter, Inter til brødtekst, begge selvhostet som woff2.
+
+**Gull har tre stopp — samme kulør, tre styrker.** Bruk feil stopp og teksten forsvinner:
+
+| Token | Hex | Er egentlig | Kun til |
+|---|---|---|---|
+| `--gull-marine` | `#E3CEA4` | Champagne | Marine flate. 1,45:1 mot papir — usynlig på lyst |
+| `--gull-sterk` | `#C69739` | Gull | Strek og flate på lyst. **Aldri bokstaver** |
+| `--gull-tekst` | `#856629` | Bronse | Eneste gulltone som kan være tekst på lyst |
+
+Bare den midterste er faktisk gull. Champagnen er målt ut av logofila og skal ikke byttes ut med noe mer gyllent — `#BDA677` og `#EDE1C7` finnes i søsterselskapenes materiell og hører ikke hjemme her.
+
+Full palett med alle tokens og kontrasttall i `02_DESIGNSYSTEM.md` §1. **Fasiten er `kunnskap/08_Creative_Library.md`** — avviker noe, vinner fasiten.
 
 Logoen er ordmerket `noXcuse` med taklinje over og X-en i gull. Aldri rød eller terrakotta X. Aldri verktøysymboler i ikonsettet — hammer, pensel og malerrulle hører til vedlikeholdsbransjen.
 
@@ -105,7 +117,7 @@ Tagline «levert som avtalt» brukes i footer og signatur, aldri i løpende teks
 
 ## Bevegelse
 
-Én easing: `cubic-bezier(0.22, 0.61, 0.36, 1)`. Bygg statisk fallback først, effekten etterpå. Alt innhold skal være lesbart uten JS. `prefers-reduced-motion: reduce` skal gi statisk side. Animasjoner legges til **sist**, etter at hele strukturen står.
+Én easing: `cubic-bezier(0.22, 1, 0.36, 1)`. Bygg statisk fallback først, effekten etterpå. Alt innhold skal være lesbart uten JS. `prefers-reduced-motion: reduce` skal gi statisk side. Animasjoner legges til **sist**, etter at hele strukturen står.
 
 ## Skjemaer
 

@@ -10,9 +10,9 @@
 // LEAD-rettelse etter verifikasjon (se .foreman/ledger.md, Kjøring 3):
 // 1. config.ts manglet ADRESSE — lagt til der, brukes nå herfra i stedet for en direkte
 //    null-verdi.
-// 2. Fokusringen arvet --gull-dyp fra global.css uansett bakgrunn. På denne marine flaten
+// 2. Fokusringen arvet --gull-tekst fra global.css uansett bakgrunn. På denne marine flaten
 //    gir det ~2,5:1 — samme dårlige tall som CLAUDE.md sin fargeregel advarer mot for
-//    "gull tekst på marine". Rettet nedenfor: --color-gull (lys gull, ~8,7:1 på marine)
+//    "gull tekst på marine". Rettet nedenfor: --color-gull-marine (lys gull, ~8,7:1 på marine)
 //    brukes for fokusringen kun innenfor footer. Bekreftet med bruker: #856629 beholdes
 //    som gull-tekst-på-lyst (5,74:1, uendret), problemet var kun fokusringen på mørk bunn.
 // 3. "Informasjonskapsler" var en oppdiktet rute — ingen slik side finnes i sideinventaret.
@@ -94,11 +94,11 @@ const sider = [
     color: var(--color-bomull);
   }
 
-  /* --gull-dyp (global focus-ring farge) er kalibrert for lys bakgrunn, 5,74:1.
+  /* --gull-tekst (global focus-ring farge) er kalibrert for lys bakgrunn, 5,74:1.
      På denne marine flaten gir den ~2,5:1 — under kravet for et fokusindikator.
-     --color-gull (lys gull) gir ~8,7:1 på marine og brukes derfor kun her. */
+     --color-gull-marine (lys gull) gir ~8,7:1 på marine og brukes derfor kun her. */
   .footer :focus-visible {
-    outline-color: var(--color-gull);
+    outline-color: var(--color-gull-marine);
   }
 
   .footer__grid {
@@ -125,7 +125,7 @@ const sider = [
   }
 
   .footer__tagline {
-    color: var(--color-gull);
+    color: var(--color-gull-marine);
     margin: 0 0 var(--spacing-rom-2);
   }
 
@@ -141,7 +141,7 @@ const sider = [
     font-size: var(--text-mikro);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-gull);
+    color: var(--color-gull-marine);
     margin: 0 0 var(--spacing-rom-2);
   }
 
@@ -159,7 +159,7 @@ const sider = [
     text-decoration: none;
   }
   .footer__col a:hover {
-    color: var(--color-gull);
+    color: var(--color-gull-marine);
     text-decoration: underline;
   }
 

@@ -29,15 +29,21 @@ const { floatOverHero = false } = Astro.props as Props;
 
 // Meny endret 2026-08-12 på Joachims eksplisitte instruks: CTA-knappen
 // («Book befaring») fjernet, «Kontakt oss» lagt til (peker til samme
-// /befaring-side som knappen gjorde — ingen ny side). «Modeller» → «Modellene
-// våre», «Slik gjør vi det» → «Prosessen». Avviker bevisst fra den tidligere
-// bekreftede listen i 04_TEKST_ALLE_SIDER.md §Globalt/Navigasjon — den
-// spec-fila er ikke oppdatert til å matche ennå.
+// /befaring-side som knappen gjorde — ingen ny side). Avviker bevisst fra
+// den tidligere bekreftede listen i 04_TEKST_ALLE_SIDER.md §Globalt/
+// Navigasjon — den spec-fila er ikke oppdatert til å matche ennå.
+//
+// «Modeller» → «Våre hus» + ny «Våre hytter»-side lagt til rett etter,
+// «Prosessen» tilbake til opprinnelig «Slik gjør vi det» (Joachim spurte om
+// bedre ord, LEAD anbefalte å beholde kildetekstens ordlyd — mer konkret enn
+// «Prosessen»). Rekkefølge etter Joachims eksplisitte instruks: hus, hytter,
+// [prosess], [kvalitet], deretter resten uendret relativ rekkefølge.
 const lenker = [
-  { href: '/modeller', label: 'Modellene våre' },
-  { href: '/hva-koster-det', label: 'Hva koster det' },
-  { href: '/slik-gjor-vi-det', label: 'Prosessen' },
+  { href: '/modeller', label: 'Våre hus' },
+  { href: '/vare-hytter', label: 'Våre hytter' },
+  { href: '/slik-gjor-vi-det', label: 'Slik gjør vi det' },
   { href: '/kvalitet', label: 'Kvalitet' },
+  { href: '/hva-koster-det', label: 'Hva koster det' },
   { href: '/om-oss', label: 'Om oss' },
   { href: '/befaring', label: 'Kontakt oss' },
 ];
@@ -240,7 +246,7 @@ const lenker = [
     font-weight: 500;
   }
   .nav__list a:hover {
-    color: var(--color-gull-dyp);
+    color: var(--color-gull-tekst);
   }
 
   @media (min-width: 1024px) {
@@ -286,18 +292,21 @@ const lenker = [
     color: var(--color-bomull);
   }
   .nav--over .nav__list a:hover {
-    color: var(--color-gull);
+    color: var(--color-gull-marine);
   }
-  /* Logo over fotohero — Joachims eksplisitte instruks 2026-08-12: ord og tak
-     i gull, X i marine når naven er gjennomsiktig oppå heroen. Motsatt for
-     ord/X (ikke tak) i solid-tilstanden lenger ned. Reacher inn i Logo.astro
+  /* Logo over fotohero. Joachim, 2026-08-12: taket skal alltid ha samme
+     farge som X — «overalt, også på blå bakgrunn» (bekreftet eksplisitt,
+     overstyrer den tidligere «tak alltid gull»-regelen). Ordet er alene om
+     å beholde gull i denne (gjennomsiktige) tilstanden; tak+X er hvite
+     sammen. Motsatt i solid-tilstanden lenger ned. Reacher inn i Logo.astro
      sine interne klasser med :global() — samme teknikk som no-js-regelen
      under, siden Logo er en egen scopet komponent. */
-  .nav--over .nav__logo :global(.logo-word),
-  .nav--over .nav__logo :global(.logo-roof) {
-    color: var(--color-gull);
+  .nav--over .nav__logo :global(.logo-word) {
+    color: var(--color-gull-marine);
   }
-  .nav--over .nav__logo :global(.logo-x) {
+  .nav--over .nav__logo :global(.logo-roof),
+  .nav--over .nav__logo :global(.logo-x),
+  .nav--over .nav__logo :global(.logo-tagline) {
     color: var(--color-bomull);
   }
 
@@ -324,20 +333,25 @@ const lenker = [
   }
   .nav--over.is-solid .nav__list a:hover,
   .nav--over:has(.nav__toggle[open]) .nav__list a:hover {
-    color: var(--color-gull-dyp);
+    color: var(--color-gull-tekst);
   }
-  /* Solid tilstand: ord og X bytter farge (motsatt av over-hero-tilstanden),
-     taket beholder gull uendret — bevisst unntak fra fargesystemets "aldri
-     gull-marine (E3CEA4) på lys flate"-regel (1,5:1 kontrast). Joachim bekreftet
-     eksplisitt at dette skal stå slik til tross for regelen. Dokumentert i
-     .foreman/ledger.md. */
+  /* Solid tilstand: ord og X bytter farge (motsatt av over-hero-tilstanden).
+     Taket følger X — samme "tak = X sin farge"-regel som over, derfor gull
+     her (X er gull i denne tilstanden), til tross for at gull-marine på lys
+     flate ellers er en "aldri"-regel i fargesystemet (1,5:1 kontrast).
+     Joachim bekreftet eksplisitt at tak-følger-X skal gjelde overalt.
+     Dokumentert i .foreman/ledger.md. */
   .nav--over.is-solid .nav__logo :global(.logo-word),
   .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-word) {
     color: var(--color-marine);
   }
+  .nav--over.is-solid .nav__logo :global(.logo-roof),
   .nav--over.is-solid .nav__logo :global(.logo-x),
-  .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-x) {
-    color: var(--color-gull);
+  .nav--over.is-solid .nav__logo :global(.logo-tagline),
+  .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-roof),
+  .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-x),
+  .nav--over:has(.nav__toggle[open]) .nav__logo :global(.logo-tagline) {
+    color: var(--color-gull-marine);
   }
 
   /* Uten JS blir .is-solid aldri satt, og menyen ville stått med lys tekst på
@@ -365,7 +379,9 @@ const lenker = [
   :global(.no-js) .nav--over .nav__logo :global(.logo-word) {
     color: var(--color-marine);
   }
-  :global(.no-js) .nav--over .nav__logo :global(.logo-x) {
-    color: var(--color-gull);
+  :global(.no-js) .nav--over .nav__logo :global(.logo-roof),
+  :global(.no-js) .nav--over .nav__logo :global(.logo-x),
+  :global(.no-js) .nav--over .nav__logo :global(.logo-tagline) {
+    color: var(--color-gull-marine);
   }
 </style>

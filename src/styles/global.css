@@ -3,20 +3,36 @@
 /* Tailwind 4 navngir tokens med et strukturelt prefiks per namespace
    (--color-, --text-, --spacing-, --radius-, --shadow-, --ease-).
    Identitetsnavnet etter prefikset er uendret fra 02_DESIGNSYSTEM.md —
-   f.eks. --gull-dyp der lever videre som --color-gull-dyp. Se DESIGN.md §0. */
+   f.eks. --gull-tekst der lever videre som --color-gull-tekst. Se DESIGN.md §0. */
 @theme {
-  /* 1. Farger — se DESIGN.md §1 for kontrastmålinger */
-  --color-bomull: #FAF8F2;
-  --color-lin: #F0ECE4;
-  --color-marine: #172E57;
-  --color-marine-80: #45577c;
-  --color-gull: #E3CEA4;
-  --color-gull-sterk: #C69739; /* gjenopprettet fra kunnskap/08_Creative_Library.md — mangler i 02_DESIGNSYSTEM.md.
-    Strek/flate på lys bakgrunn (logo-taklinje, logo-X), ALDRI løpende tekst — kontrastunntatt,
-    se DESIGN.md §3. Ikke samme rolle som --gull-dyp (som er kalibrert for TEKST på lyst). */
-  --color-gull-dyp: #856629; /* korrigert — se DESIGN.md §0, ikke #7A5E1C fra 02_DESIGNSYSTEM.md */
-  --color-feil: #B3261E; /* korrigert — se DESIGN.md §0, ikke #9B2C1F fra 02_DESIGNSYSTEM.md */
-  --color-ok: #1F5D3A;
+  /* 1. Farger — full palett fra kunnskap/08_Creative_Library.md (fasit).
+     02_DESIGNSYSTEM.md §1 er nå synkronisert mot samme kilde, med kontrasttall. */
+
+  /* Lyse flater */
+  --color-bomull: #FAF8F2;    /* standard sideflate */
+  --color-lin: #F0ECE4;       /* alternerende seksjon */
+  --color-papir: #FFFDF9;     /* kort, skjemafelt, trapp-rutenett */
+  --color-hairline: #E4DED2;  /* tynne skillelinjer. Dekorativ, ALDRI tekst */
+
+  /* Tekst og struktur på lys flate */
+  --color-marine: #172E57;    /* primærtekst, mørke flater, knapper, logo — 12,64:1 på bomull */
+  --color-stein: #5E6671;     /* ingress, bildetekst, sekundærtekst — 5,47:1 på bomull */
+  --color-fjord: #2C5773;     /* lenker og dokumentasjonsmerker — 7,28:1. KUN lys flate */
+
+  /* Tekst på marine flate */
+  --color-dark-text: #F8F7F4; /* brødtekst og titler — 12,53:1 */
+  --color-dark-soft: #AEBECD; /* ingress og sekundærtekst — 7,06:1 */
+
+  /* Gull — én farge (40°) i tre styrker. Feil stopp = usynlig tekst.
+     Alle tre heter «gull», men bare den midterste ER gull. Ikke bytt ut
+     champagnen med noe mer gyllent — den er målt ut av logofila. */
+  --color-gull-marine: #E3CEA4; /* CHAMPAGNE. KUN marine flate. 1,45:1 på papir */
+  --color-gull-sterk: #C69739;  /* GULL. Strek og flate på lyst. ALDRI bokstaver — 2,51:1 */
+  --color-gull-tekst: #856629;  /* BRONSE. Eneste gulltone som kan være tekst på lyst — 5,03:1 */
+
+  /* Funksjonell */
+  --color-feil: #B3261E;      /* 6,15:1 på bomull */
+
   --color-kant: rgba(23, 46, 87, 0.14);
   --color-kant-sterk: rgba(23, 46, 87, 0.28);
 
@@ -113,7 +129,7 @@
 
 /* Fokusring — aldri outline: none. Fase 5 (tilgjengelighet), 01_BYGGEPLAN.md */
 :focus-visible {
-  outline: 2px solid var(--color-gull-dyp);
+  outline: 2px solid var(--color-gull-tekst);
   outline-offset: 3px;
 }
 

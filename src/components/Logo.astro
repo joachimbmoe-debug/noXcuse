@@ -32,6 +32,7 @@ const { flate = 'lys', class: klasse } = Astro.props as Props;
     />
   </svg>
   <span class="logo-word">no<span class="logo-x">X</span>cuse</span>
+  <span class="logo-tagline">Levert som avtalt</span>
 </span>
 
 <style>
@@ -61,28 +62,53 @@ const { flate = 'lys', class: klasse } = Astro.props as Props;
     font-weight: 800;
   }
 
-  /* Lys flate (standard) — taklinje og X i gull-sterk (kontrastunntatt dekor,
-     ALDRI løpende tekst), ordmerket i marine tekst. */
+  /* Taglinen — gjeninnført 2026-08-12 (Joachim), tidligere fjernet 09.08.2026
+     («ren forenkling, ingen erstatning», se DESIGN.md §3-historikk). Følger
+     X sin farge, akkurat som taklinjen — «undertekst skal også følge fargen
+     til X». */
+  .logo-tagline {
+    font-family: var(--font-tekst);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Lys flate (standard) — taklinje og tagline følger X sin farge («taket
+     skal ha samme farge som X», Joachim 2026-08-12, bekreftet å gjelde
+     overalt). X (og dermed taket/taglinen) i gull-sterk — kontrastunntatt
+     dekor/lockup-element, en pre-eksisterende avgjørelse fra før denne
+     økten (se DESIGN.md §3 "Variant C"), ikke rørt her. Ordmerket i marine
+     tekst. */
   .logo--lys .logo-roof,
-  .logo--lys .logo-x {
+  .logo--lys .logo-x,
+  .logo--lys .logo-tagline {
     color: var(--color-gull-sterk);
   }
   .logo--lys .logo-word {
     color: var(--color-marine);
   }
 
-  /* Marine flate (footer) — hele lockupen i lys gull. En marine X på flat
-     marine bunn ville vært usynlig, derfor gull, ikke marine, her. */
+  /* Marine flate (footer) — taklinje og tagline følger X igjen. X i bomull
+     (hvit) — Joachim, 2026-08-12: "dette gjelder når logoen står med blå
+     bakgrunn". Ordmerket alene beholder gull-marine (champagne) i denne
+     flaten. */
   .logo--marine .logo-roof,
-  .logo--marine .logo-word,
-  .logo--marine .logo-x {
-    color: var(--color-gull);
+  .logo--marine .logo-x,
+  .logo--marine .logo-tagline {
+    color: var(--color-bomull);
+  }
+  .logo--marine .logo-word {
+    color: var(--color-gull-marine);
   }
 
   /* Minstestørrelse — se DESIGN.md-notatet over. Ordmerket krysser aldri denne
-     grensen i praksis ved dagens faste 22px, men beholdes som beskyttelse. */
+     grensen i praksis ved dagens faste 22px, men beholdes som beskyttelse.
+     Taglinen skjules i samme brytepunkt — samme trengselsbegrunnelse som
+     taklinjen. */
   @media (max-width: 360px) {
-    .logo-roof {
+    .logo-roof,
+    .logo-tagline {
       display: none;
     }
   }
