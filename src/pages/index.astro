@@ -73,7 +73,8 @@ const heroBilder = [
         bestemmer deg.
       </p>
       <div class="hero__cta">
-        <Knapp variant="primaer" href="/modeller">Se modellene</Knapp>
+        <Knapp variant="primaer" href="/kan-du-bygge-her">Kan du bygge her?</Knapp>
+        <Knapp variant="sekundaer" href="/modeller">Se modellene</Knapp>
       </div>
     </div>
   </section>
@@ -281,11 +282,20 @@ const heroBilder = [
     gap: var(--spacing-rom-2);
   }
 
-  /* CTA-kontrast mot fotohero. Primær (marine bunn, lys tekst) leser
-     allerede godt mot foto — kun en tynn lys kant lagt til for å skille
-     knappen fra et mørkt bildeparti. Portert fra Husviks .hero .btn-solid.
-     (Sekundær-varianten sin egen kontrast-override er fjernet 2026-08-12
-     sammen med "Book befaring"-knappen — heroen har nå kun ett primær-CTA.) */
+  /* CTA-kontrast mot fotohero. Knapp.astro sin variant="sekundaer" er marine
+     tekst/kant på transparent bunn — ulesbar oppå et mørkt foto. Scopet
+     override, ikke en global endring i Knapp.astro. Portert fra Husviks
+     .hero .btn-ghost/.hero .btn-solid. */
+  .hero .knapp--sekundaer {
+    color: var(--color-bomull);
+    border-color: color-mix(in srgb, var(--color-bomull) 50%, transparent);
+  }
+  .hero .knapp--sekundaer:hover {
+    border-color: var(--color-bomull);
+    background-color: color-mix(in srgb, var(--color-bomull) 12%, transparent);
+  }
+  /* Primær (marine bunn, lys tekst) leser allerede godt mot foto — kun en
+     tynn lys kant lagt til for å skille knappen fra et mørkt bildeparti. */
   .hero .knapp--primaer {
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-bomull) 28%, transparent);
   }
