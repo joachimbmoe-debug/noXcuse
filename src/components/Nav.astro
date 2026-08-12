@@ -14,7 +14,6 @@
 //   en uavklart 900px-referanse fra den generelle CLAUDE.md-fila, men den fila
 //   beskriver den gamle statiske noXcuse-siden i ../Nettside/, ikke denne
 //   Astro-gjenoppbygningen. 1024px er riktig her.
-import Knapp from './Knapp.astro';
 import Logo from './Logo.astro';
 
 // floatOverHero — ny, valgfri prop lagt til 2026-08-12 på Joachims eksplisitte
@@ -28,18 +27,44 @@ interface Props {
 }
 const { floatOverHero = false } = Astro.props as Props;
 
+// Meny endret 2026-08-12 på Joachims eksplisitte instruks: CTA-knappen
+// («Book befaring») fjernet, «Kontakt oss» lagt til (peker til samme
+// /befaring-side som knappen gjorde — ingen ny side). «Modeller» → «Modellene
+// våre», «Slik gjør vi det» → «Prosessen». Avviker bevisst fra den tidligere
+// bekreftede listen i 04_TEKST_ALLE_SIDER.md §Globalt/Navigasjon — den
+// spec-fila er ikke oppdatert til å matche ennå.
 const lenker = [
-  { href: '/modeller', label: 'Modeller' },
+  { href: '/modeller', label: 'Modellene våre' },
   { href: '/hva-koster-det', label: 'Hva koster det' },
-  { href: '/slik-gjor-vi-det', label: 'Slik gjør vi det' },
+  { href: '/slik-gjor-vi-det', label: 'Prosessen' },
   { href: '/kvalitet', label: 'Kvalitet' },
   { href: '/om-oss', label: 'Om oss' },
+  { href: '/befaring', label: 'Kontakt oss' },
 ];
 ---
 
 <header class={['nav', floatOverHero && 'nav--over'].filter(Boolean).join(' ')} data-nav={floatOverHero ? true : undefined}>
   <div class="nav__inner">
     <a href="/" class="nav__logo" aria-label="noXcuse — til forsiden"><Logo flate="lys" /></a>
+
+    {/* Desktop (≥1024px) — egen, alltid synlig menylinje, IKKE inni <details>.
+        Chrome legger et internt, ikke-adresserbart "lukket details"-lag rundt
+        alt annet enn <summary> når detaljene ikke er [open] (en moderne
+        content-visibility-lignende containment-mekanisme UA-en styrer selv —
+        ingen CSS på .nav__panel klarte å overstyre den, testet grundig med
+        display/flex/content-visibility, alt ga fortsatt 0px bredde). Derfor:
+        et helt separat <nav>-element her, kun for desktop, som aldri er inni
+        et lukket <details> og dermed aldri rammes av den containment-buggen.
+        Mobilpanelet under er uendret — <details>/<summary>-mønsteret fungerer
+        fint der siden det faktisk åpnes via [open]-attributtet, ikke tvinges
+        synlig på et lukket element. */}
+    <nav class="nav__desktop" aria-label="Hovedmeny">
+      <ul class="nav__list">
+        {lenker.map((l) => (
+          <li><a href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
 
     <details class="nav__toggle">
       <summary class="nav__toggle-btn" aria-label="Åpne meny">
@@ -48,10 +73,7 @@ const lenker = [
         </span>
       </summary>
 
-      <nav class="nav__panel" aria-label="Hovedmeny">
-        <div class="nav__cta">
-          <Knapp variant="primaer" href="/befaring">Book befaring</Knapp>
-        </div>
+      <nav class="nav__panel" aria-label="Hovedmeny (mobil)">
         <ul class="nav__list">
           {lenker.map((l) => (
             <li><a href={l.href}>{l.label}</a></li>
@@ -135,6 +157,13 @@ const lenker = [
     transition: color var(--tid-nor) var(--ease-brand);
   }
 
+  /* Desktop menylinje — skjult på mobil, vist ved 1024px+ (se media query
+     under). Egen, alltid-synlig <nav>, ikke inni <details> — se kommentaren
+     i markup over for hvorfor. */
+  .nav__desktop {
+    display: none;
+  }
+
   /* Hamburger-knapp (summary) */
   .nav__toggle {
     display: block;
@@ -195,10 +224,6 @@ const lenker = [
     border-top: 1px solid var(--color-kant);
   }
 
-  .nav__cta {
-    order: -1;
-  }
-
   .nav__list {
     list-style: none;
     display: flex;
@@ -219,36 +244,25 @@ const lenker = [
   }
 
   @media (min-width: 1024px) {
-    .nav__toggle-btn {
+    /* Hamburgeren (hele <details>) skjules helt på desktop — .nav__desktop
+       under overtar. Ikke prøv å tvinge .nav__panel synlig igjen her: se
+       markup-kommentaren over .nav__desktop for hvorfor det aldri fungerer
+       pålitelig (lukket <details>-containment Chrome styrer selv). */
+    .nav__toggle {
       display: none;
     }
 
-    .nav__toggle {
+    .nav__desktop {
       display: flex;
       align-items: center;
     }
 
-    /* Tvinger panelet synlig som rad uansett åpen/lukket-tilstand på desktop */
-    .nav__panel,
-    .nav__toggle[open] > .nav__panel {
-      display: flex !important;
-      flex-direction: row;
-      align-items: center;
-      gap: var(--spacing-rom-4);
-      padding: 0;
-      border-top: 0;
-    }
-
-    .nav__list {
+    .nav__desktop .nav__list {
       flex-direction: row;
       gap: var(--spacing-rom-4);
     }
-    .nav__list a {
+    .nav__desktop .nav__list a {
       padding: var(--spacing-rom-1) 0;
-    }
-
-    .nav__cta {
-      order: 1;
     }
   }
 
