@@ -1,0 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Netlify Forms krever ikke serverfunksjoner — statisk `output: 'static'` i
+# astro.config.mjs holder. Netlify oppdager <form data-netlify="true">-skjemaene
+# automatisk ved bygging så lenge sidene som inneholder dem er del av output.
