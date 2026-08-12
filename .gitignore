@@ -22,3 +22,6 @@ node_modules/
 # Holdes utenfor git: historikken tar vare på hver versjon for alltid,
 # også etter at filen er slettet.
 _kilder/
+
+# Local Netlify folder
+.netlify
