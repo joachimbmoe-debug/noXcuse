@@ -1,0 +1,61 @@
+---
+// Engelsk stubbe for forsiden `/` — kun i18n-infrastruktur, IKKE oversatt innhold.
+// Lagt til 2026-08-12 på Joachims eksplisitte instruks (i18n-routing +
+// språkvelger). Ekte engelsk markedsføringstekst leveres av Joachim selv
+// senere — se MANGLER.md. Ingen faktaEllerPlassholder()/config.ts-felt her,
+// denne siden har ikke noe reelt fakta-innhold ennå.
+//
+// Bruker Base.astro direkte med floatOverHero (samme som den norske
+// index.astro), for å holde Nav sin flytende-meny-mekanikk (og dermed riktig
+// fargekontrast i alle nav-tilstander) identisk med originalen. Ingen ekte
+// fabrikkfoto eller markedsføringstekst gjenskapt her — kun en marine
+// .hero-flate som gir JS-scroll-mekanikken (querySelector('.hero')) noe å
+// måle mot, se hero-slideshow.js og Nav.astro.
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="noXcuse — English"
+  description="English content for the homepage is on its way."
+  floatOverHero
+>
+  <section class="hero">
+    <div class="hero__inner">
+      <h1 class="hero__h1">noXcuse</h1>
+      <p class="hero__tekst">
+        English content is on its way. In the meantime, please use the
+        <a href="/">Norwegian homepage</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    min-height: 60svh;
+    display: flex;
+    align-items: center;
+    background-color: var(--color-marine);
+  }
+  .hero__inner {
+    width: 100%;
+    max-width: var(--spacing-bredde);
+    margin-inline: auto;
+    padding: var(--spacing-rom-7) var(--spacing-side-x) var(--spacing-rom-6);
+  }
+  .hero__h1 {
+    font-size: var(--text-hero);
+    color: var(--color-bomull);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .hero__tekst {
+    font-size: var(--text-stor);
+    color: color-mix(in srgb, var(--color-bomull) 85%, transparent);
+    max-width: var(--spacing-bredde-tekst);
+    margin: 0;
+  }
+  .hero__tekst a {
+    color: var(--color-bomull);
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+// Engelsk stubbe for `/kostnadsguiden` — kun i18n-infrastruktur, IKKE
+// oversatt innhold. Se astro.config.mjs sin i18n-blokk og MANGLER.md.
+// Bruker Landing.astro (samme som den norske originalen) — ingen Nav på
+// denne siden, kun skip-link + minimal footer, jf. Landing.astro sin
+// distraksjonsfrie hensikt.
+import Landing from '../../layouts/Landing.astro';
+---
+
+<Landing title="noXcuse — The cost guide" description="English content for this page is on its way.">
+  <section class="stub">
+    <div class="stub__inner">
+      <h1 class="stub__h1">The cost guide</h1>
+      <p class="stub__tekst">
+        English content is on its way. In the meantime, please use the
+        <a href="/kostnadsguiden">Norwegian version of this page</a>.
+      </p>
+    </div>
+  </section>
+</Landing>
+
+<style>
+  .stub {
+    background-color: var(--color-bomull);
+  }
+  .stub__inner {
+    max-width: var(--spacing-bredde-tekst);
+    margin-inline: auto;
+    padding: var(--spacing-rom-7) var(--spacing-side-x) var(--spacing-rom-6);
+  }
+  .stub__h1 {
+    font-size: var(--text-h2);
+    color: var(--color-marine);
+    margin: 0 0 var(--spacing-rom-3);
+  }
+  .stub__tekst {
+    font-size: var(--text-stor);
+    color: var(--color-stein);
+    margin: 0;
+  }
+  .stub__tekst a {
+    color: var(--color-marine);
+  }
+</style>

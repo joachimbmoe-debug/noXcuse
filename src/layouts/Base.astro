@@ -16,9 +16,14 @@ interface Props {
   floatOverHero?: boolean;
 }
 const { title, description, floatOverHero = false } = Astro.props as Props;
+
+// lang-attributt følger Astro sin i18n-routing (astro.config.mjs), lagt til
+// 2026-08-12 sammen med /en/-stubbene og språkvelgeren i Nav.astro. Uten
+// dette rendret /en/-sidene med lang="nb" — feil for skjermlesere og SEO.
+const spraak = Astro.currentLocale ?? 'nb';
 ---
 
-<html lang="nb" class="no-js">
+<html lang={spraak} class="no-js">
   <head>
     <meta charset="UTF-8" />
     {/* Fjerner no-js umiddelbart hvis JS kjører. Kritisk for den flytende menyen

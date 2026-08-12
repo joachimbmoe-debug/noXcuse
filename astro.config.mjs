@@ -14,5 +14,17 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
+  // i18n-infrastruktur lagt til 2026-08-12 på Joachims eksplisitte instruks —
+  // KUN routing + språkvelger, ikke oversatt innhold ennå (se src/pages/en/**
+  // og MANGLER.md). Norsk forblir på rot-URL-er (ingen /nb/-prefiks), engelsk
+  // får /en/-prefiks. https://docs.astro.build/en/guides/internationalization/
+  i18n: {
+    locales: ['nb', 'en'],
+    defaultLocale: 'nb',
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+
   integrations: [sitemap()]
 });

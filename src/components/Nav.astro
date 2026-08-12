@@ -47,6 +47,68 @@ const lenker = [
   { href: '/om-oss', label: 'Om oss' },
   { href: '/befaring', label: 'Kontakt oss' },
 ];
+
+// Språkvelger — infrastruktur lagt til 2026-08-12 på Joachims eksplisitte
+// instruks (i18n-routing + språkvelger, se astro.config.mjs sin i18n-blokk
+// og src/pages/en/**). Astro sin innebygde i18n: Astro.currentLocale er
+// 'en' på /en/-sider, ellers 'nb' (defaultLocale uten /nb/-prefiks).
+//
+// Kun disse 16 sidene har en engelsk stubbe ennå (se ticket-oppgaven 2026-08-12).
+// De to dynamiske rutene (modeller/[slug], kunnskap/[slug]) har ingen engelsk
+// motpart — språkvelgeren faller da tilbake til engelsk forside (/en/) i
+// stedet for å konstruere en ugyldig URL.
+const engelskeStubber = new Set([
+  '/',
+  '/befaring',
+  '/egen-entreprenor',
+  '/hva-koster-det',
+  '/kan-du-bygge-her',
+  '/kostnadsguiden',
+  '/kvalitet',
+  '/mulighetsvurdering',
+  '/om-oss',
+  '/slik-gjor-vi-det',
+  '/takk',
+  '/tomta-er-klar',
+  '/vare-hytter',
+  '/vi-tar-resten',
+  '/modeller',
+  '/kunnskap',
+]);
+
+// Trailing slash nullstilles bort (unntatt roten selv) så oppslaget i settet
+// over fungerer uansett om stien kommer med eller uten avsluttende skråstrek.
+const gjeldendeSti = Astro.url.pathname;
+const normalisertSti =
+  gjeldendeSti.length > 1 && gjeldendeSti.endsWith('/')
+    ? gjeldendeSti.slice(0, -1)
+    : gjeldendeSti;
+
+const erEngelsk = Astro.currentLocale === 'en';
+
+let spraakHref: string;
+let spraakTekst: string;
+let spraakAriaLabel: string;
+
+if (erEngelsk) {
+  // Engelsk → norsk: alle 16 engelske stubber er 1:1-speil av en norsk side
+  // (se listen over), så det holder å fjerne /en-prefikset fra stien.
+  const nbSti = normalisertSti.replace(/^\/en/, '');
+  spraakHref = nbSti === '' ? '/' : nbSti;
+  spraakTekst = 'NO';
+  spraakAriaLabel = 'Bytt til norsk';
+} else {
+  // Norsk → engelsk: kun for de 16 sidene som faktisk har en engelsk
+  // stubbe. De to dynamiske rutene (og alt annet ukjent) faller tilbake
+  // til engelsk forside i stedet for en ugyldig /en/...-URL.
+  spraakHref = engelskeStubber.has(normalisertSti)
+    ? normalisertSti === '/'
+      ? '/en/'
+      : `/en${normalisertSti}`
+    : '/en/';
+  spraakTekst = 'EN';
+  spraakAriaLabel = 'Switch to English';
+}
 ---
 
 <header class={['nav', floatOverHero && 'nav--over'].filter(Boolean).join(' ')} data-nav={floatOverHero ? true : undefined}>
@@ -69,6 +131,9 @@ const lenker = [
         {lenker.map((l) => (
           <li><a href={l.href}>{l.label}</a></li>
         ))}
+        <li class="nav__lang-item">
+          <a href={spraakHref} class="nav__lang" aria-label={spraakAriaLabel} hreflang={erEngelsk ? 'nb' : 'en'}>{spraakTekst}</a>
+        </li>
       </ul>
     </nav>
 
@@ -84,6 +149,9 @@ const lenker = [
           {lenker.map((l) => (
             <li><a href={l.href}>{l.label}</a></li>
           ))}
+          <li class="nav__lang-item">
+            <a href={spraakHref} class="nav__lang" aria-label={spraakAriaLabel} hreflang={erEngelsk ? 'nb' : 'en'}>{spraakTekst}</a>
+          </li>
         </ul>
       </nav>
     </details>
@@ -260,6 +328,22 @@ const lenker = [
     color: var(--color-gull-marine);
   }
 
+  /* Språkvelger — bevisst ingen egen fargeregel her: `.nav__list a` over og
+     dens `.nav--over`/`.nav--over.is-solid`/`:global(.no-js)`-overstyringer
+     lenger ned i denne fila dekker allerede alle fire nav-tilstander, siden
+     lenken ligger inni samme `.nav__list`. Kun en tynn kant lagt til for å
+     skille den visuelt fra sidelenkene. */
+  .nav__lang-item {
+    border-top: 1px solid color-mix(in srgb, var(--color-dark-text) 20%, transparent);
+    padding-top: var(--spacing-rom-1);
+    margin-top: var(--spacing-rom-1);
+  }
+  .nav__lang {
+    font-size: var(--text-liten);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
   @media (min-width: 1024px) {
     /* Hamburgeren (hele <details>) skjules helt på desktop — .nav__desktop
        under overtar. Ikke prøv å tvinge .nav__panel synlig igjen her: se
@@ -280,6 +364,16 @@ const lenker = [
     }
     .nav__desktop .nav__list a {
       padding: var(--spacing-rom-1) 0;
+    }
+
+    /* Desktop-menyen er rad, ikke stabel — bytt kanten fra topp til venstre
+       for språkvelgeren. */
+    .nav__desktop .nav__lang-item {
+      border-top: none;
+      border-left: 1px solid color-mix(in srgb, var(--color-dark-text) 20%, transparent);
+      padding-top: 0;
+      padding-left: var(--spacing-rom-4);
+      margin-top: 0;
     }
   }
 

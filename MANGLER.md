@@ -103,6 +103,17 @@ Ikke BEKREFT-punkter, men verdt å spore.
 
 ---
 
+## Engelsk versjon
+
+i18n-infrastruktur (Astro sin innebygde `i18n`-routing, `/en/`-prefiks, språkvelger i Nav.astro)
+er bygget 2026-08-12. Selve innholdet er ikke.
+
+- [ ] **Engelsk tekst for alle 16 `/en/`-sider** — stubbene i `src/pages/en/` viser i dag kun en
+  «English content is on its way»-setning med lenke tilbake til norsk. Joachim skaffer og leverer
+  den engelske teksten selv; ingen dato satt for når.
+
+---
+
 ## Regelen
 
 Trengs et av disse tallene i en tekst, skriv at det mangler. Ikke fyll inn noe plausibelt.
