@@ -6,7 +6,7 @@
 > bygging, ikke i kilden». Kryss av `[x]` og skriv svaret rett i lista når noe blir bekreftet — ikke
 > flytt det til en annen fil.
 
-**Oppdatert sist:** 2026-08-12 — telefon, e-post, importselskapets navn (Levertnorge AS) og domene (no-xcuse.no) bekreftet av Joachim, resten uendret.
+**Oppdatert sist:** 2026-08-12 — telefon, e-post, importselskapets navn (Levert Norge AS) og domene (no-xcuse.no) bekreftet av Joachim, resten uendret.
 
 ---
 
@@ -28,7 +28,7 @@ De tyngste blokkerne — én stopper to hele kundesegmenter, én er en juridisk 
 - [x] **[#2] Telefonnummer** — **91661470**. Bekreftet av Joachim 2026-08-11, satt i `config.ts`.
 - [x] **[#3] E-postadresse** — **erik@no-xcuse.no**. Bekreftet av Joachim 2026-08-11, satt i `config.ts`.
 - [ ] **[#10b] Postadresse** — ikke i kilde-BEKREFT-lista, oppdaget ved bygging av Footer. Lagt til som `config.ADRESSE`.
-- [x] **[#9] Importselskapets navn** — **Levertnorge AS**. Bekreftet av Joachim 2026-08-12, satt i `config.ts`.
+- [x] **[#9] Importselskapets navn** — **Levert Norge AS**. Bekreftet av Joachim 2026-08-12, satt i `config.ts`.
 
 ### Priser
 

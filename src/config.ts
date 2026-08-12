@@ -12,5 +12,5 @@ export const config = {
   EPOST: "erik@no-xcuse.no" as string | null,  // Bekreftet av Joachim i samtale 2026-08-11
   ADRESSE: null as string | null,        // BEKREFT — postadresse, vises i footer
   DOMENE: "no-xcuse.no" as string | null,  // Bekreftet av Joachim i samtale 2026-08-12, satt i astro.config.mjs `site`
-  IMPORTSELSKAP: "Levertnorge AS" as string | null,  // Bekreftet av Joachim i samtale 2026-08-12
+  IMPORTSELSKAP: "Levert Norge AS" as string | null,  // Bekreftet av Joachim i samtale 2026-08-12
 } as const;
